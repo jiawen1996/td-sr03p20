@@ -58,8 +58,10 @@ public class UserManager extends HttpServlet {
 			htmlRep += "<li>Email : " + u.getEmail() + "</li><br>";
 			htmlRep += "<li>Pwd : " + u.getPwd() + "</li><br>";
 			htmlRep += "<li>Gender : " + u.getGender() + "</li><br><br><br>";
-			htmlRep += "<input type=\"button\" onclick=\"javascript:window.location.href='/td2'\" value=\"back\" >";
 			htmlRep += "</ul>";
+			htmlRep += "<form action=\"/td2/UserManager\" method=\"post\">";
+			htmlRep += "<input type=\"submit\" name=\"back\" value=\"Back to home\" >";
+			htmlRep += "</form>";
 		}
 
 		// show last user's data
@@ -84,18 +86,31 @@ public class UserManager extends HttpServlet {
 		String pwd = request.getParameter("password");
 		String gender = request.getParameter("gender");
 		String role = request.getParameter("role");
+		String back = request.getParameter("back");
 		String contextPath = request.getContextPath();
 		System.out.println("UserManager" + contextPath);
-		// create an user
-		User newUser = new User(firstName, lastName, email, pwd, gender, role);
+
 		
-		//add an user
-		int count = 0;
-		count = usersTable.size();
-		usersTable.put(count, newUser);
-		
-		// show result
-		doGet(request, response);
+		if (request.getParameter("back") != null) {
+			// create an user
+			
+			System.out.println(request.getParameter("back"));
+			User newUser = new User(firstName, lastName, email, pwd, gender, role);
+			
+			//add an user
+			int count = 0;
+			count = usersTable.size();
+			usersTable.put(count, newUser);
+			
+			// show result
+			doGet(request, response);
+		} else {
+			System.out.println("here");
+			System.out.println(request.getParameter("back"));
+			System.out.println(request.getParameter("back") != null);
+			RequestDispatcher rd = request.getRequestDispatcher("/");
+			rd.forward(request, response);
+		}
 
 	}
 
