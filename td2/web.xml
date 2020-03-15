@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<display-name>TestJsp </display-name>
+	<welcome-file-list >
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list >
+
+<servlet>
+	<servlet-name>UserManager</servlet-name>
+	<servlet-class>td2.UserManager</servlet-class>
+</servlet>
+<servlet-mapping> 
+	<servlet-name>UserManager</servlet-name>
+	<url-pattern>/UserManager</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>UserVerification</servlet-name>
+	<servlet-class>td2.UserVerification</servlet-class>
+</servlet>
+<servlet-mapping> 
+	<servlet-name>UserVerification</servlet-name>
+	<url-pattern>/UserVerification</url-pattern>
+</servlet-mapping>
+
+</web-app>
