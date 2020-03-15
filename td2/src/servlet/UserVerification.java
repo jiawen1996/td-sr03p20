@@ -52,9 +52,11 @@ public class UserVerification extends HttpServlet {
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("password");
 		String gender = request.getParameter("gender");
-
+		String role = request.getParameter("role");
+		String contextPath = request.getContextPath();
+		System.out.println(contextPath);
 		Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
-		User newUser = new User(firstName, lastName, email, pwd, gender);
+		User newUser = new User(firstName, lastName, email, pwd, gender, role);
 		if (usersTable.isEmpty()) {
 			doGet(request, response);
 		} else {

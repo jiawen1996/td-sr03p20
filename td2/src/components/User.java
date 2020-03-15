@@ -3,14 +3,15 @@ import java.util.Objects;
 
 public class User {
 	private String firstName, lastName, email, pwd, gender;
-	
+	private String role;
 	//CONSTRUCTEUR 
-	public User(String fname, String lname, String email, String pwd, String gender) {
+	public User(String fname, String lname, String email, String pwd, String gender, String role) {
 		this.firstName = fname;
 		this.lastName = lname;
 		this.email = email;
 		this.pwd = pwd;
 		this.gender = gender;
+		this.role = role;
 	}
 	
 	//RÉCUPÉRER DES DONNÉES

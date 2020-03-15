@@ -58,6 +58,7 @@ public class UserManager extends HttpServlet {
 			htmlRep += "<li>Email : " + u.getEmail() + "</li><br>";
 			htmlRep += "<li>Pwd : " + u.getPwd() + "</li><br>";
 			htmlRep += "<li>Gender : " + u.getGender() + "</li><br><br><br>";
+			htmlRep += "<input type=\"button\" onclick=\"javascript:window.location.href='/td2'\" value=\"back\" >";
 			htmlRep += "</ul>";
 		}
 
@@ -77,35 +78,18 @@ public class UserManager extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// get data
-//		RequestDispatcher rd = request.getRequestDispatcher("/UserVerification");
-//		rd.forward(request, response);
 		String firstName = request.getParameter("firstname");
 		String lastName = request.getParameter("familyname");
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("password");
 		String gender = request.getParameter("gender");
-
+		String role = request.getParameter("role");
+		String contextPath = request.getContextPath();
+		System.out.println("UserManager" + contextPath);
 		// create an user
-		User newUser = new User(firstName, lastName, email, pwd, gender);
-//		if (usersTable.isEmpty()) {
-//			usersTable.put(0, newUser);
-//		} else {
-//			for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
-//				int key = entry.getKey();
-//				User u = entry.getValue();
-//				if (!u.equals(newUser)) {
-//					int count = 0;
-//					count = usersTable.size();
-//					usersTable.put(count, newUser);
-//				} else {
-//					System.out.println("Cette utilisateur existe déjà.");
-//					response.getWriter().println("<script>alert(\"Cette utilisateur existe déjà.\");</script>");
-//				}
-//
-//			}
-//
-//		}
+		User newUser = new User(firstName, lastName, email, pwd, gender, role);
 		
+		//add an user
 		int count = 0;
 		count = usersTable.size();
 		usersTable.put(count, newUser);
