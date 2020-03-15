@@ -71,8 +71,8 @@ public class UserVerification extends HttpServlet {
 					htmlRep += "<h3>-------------doublon------------</h3>";
 					htmlRep += "<form action=\"/td2/UserManager\" method=\"post\">";
 					htmlRep += "<br>";
-					htmlRep += "<input type=\"submit\" value=\"continue\" >";
-					htmlRep += "<input type=\"submit\" name=\"back\" value=\"Back to home\" >";
+					htmlRep += "<input type=\"submit\" name=\"button\" value=\"Continue\" >";
+					htmlRep += "<input type=\"submit\" name=\"button\" value=\"Back to home\" >";
 					htmlRep += "<input type=\"hidden\" id=\"frname\" name=\"firstname\" value=\"" + firstName + "\" >";
 					htmlRep += "<input type=\"hidden\" id=\"faname\" name=\"familyname\" value=\"" + lastName + "\"  >";
 					htmlRep += "<input type=\"hidden\" id=\"email\" name=\"email\"  value=\"" + email + "\" >";

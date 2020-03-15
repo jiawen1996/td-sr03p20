@@ -60,7 +60,7 @@ public class UserManager extends HttpServlet {
 			htmlRep += "<li>Gender : " + u.getGender() + "</li><br><br><br>";
 			htmlRep += "</ul>";
 			htmlRep += "<form action=\"/td2/UserManager\" method=\"post\">";
-			htmlRep += "<input type=\"submit\" name=\"back\" value=\"Back to home\" >";
+			htmlRep += "<input type=\"submit\" name=\"button\" value=\"Back to home\" >";
 			htmlRep += "</form>";
 		}
 
@@ -86,12 +86,12 @@ public class UserManager extends HttpServlet {
 		String pwd = request.getParameter("password");
 		String gender = request.getParameter("gender");
 		String role = request.getParameter("role");
-		String back = request.getParameter("back");
+		String button = request.getParameter("button");
 		String contextPath = request.getContextPath();
 		System.out.println("UserManager" + contextPath);
 
 		
-		if (request.getParameter("back") != null) {
+		if ("Submit".equals(button) || "Continue".equals(button) ) {
 			// create an user
 			
 			System.out.println(request.getParameter("back"));
