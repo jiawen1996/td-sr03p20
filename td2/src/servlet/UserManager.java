@@ -21,25 +21,23 @@ import javax.servlet.http.HttpServletResponse;
 public class UserManager extends HttpServlet {
 	// LISTE DES UTILISATEURS
 	private static Hashtable<Integer, User> usersTable = new Hashtable<Integer, User>();
+	private static Hashtable<Integer, User> adminsTable = new Hashtable<Integer, User>();
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public UserManager() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	public static Hashtable<Integer, User> getUsersTable() {
 		return usersTable;
 	}
-
+	
+	public static Hashtable<Integer, User> getAdminsTable() {
+		return adminsTable;
+	}
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -102,10 +100,18 @@ public class UserManager extends HttpServlet {
 				User newUser = new User(firstName, lastName, email, pwd, gender, role);
 
 				// Ajout d'un utilisateur à la list usersTable
-				int count = 0;
+				int count = 0, count2 = 0;
 				count = usersTable.size();
 				usersTable.put(count, newUser);
-				System.out.println("UserManager - User added : " + usersTable.get(count));
+				System.out.println("UserManager - User added. Number of users : " + usersTable.get(count));
+				
+				if (role.equals("Admin")) {// Ajout d'un admin
+					count2 = adminsTable.size();
+					adminsTable.put(count2, newUser);
+					System.out.println("UserManager - Admin added. Number of admins : " + adminsTable.get(count));
+				}
+				
+				
 
 				// Afficher la liste des users
 				doGet(request, response);
