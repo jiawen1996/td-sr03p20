@@ -88,6 +88,7 @@ public class UserManager extends HttpServlet {
 		String role = request.getParameter("role");
 		String btnSumit = request.getParameter("submit");
 		String btnContinue = request.getParameter("continue");
+		String btnGoToLogin = request.getParameter("login");
 		String contextPath = request.getContextPath();
 		System.out.println("UserManager - doPost - ContextPath : " + contextPath);
 		System.out.println("UserManager - usersTable size : " + usersTable.size());
@@ -113,6 +114,9 @@ public class UserManager extends HttpServlet {
 
 			}
 
+		} else if ("Se connecter".equals(btnGoToLogin)) {
+			RequestDispatcher rd = request.getRequestDispatcher("/connexion.html");
+			rd.forward(request, response);
 		} else {
 			System.out.println("UserManager - Back to home cliqué ");
 			System.out.println(request.getParameter("back"));
