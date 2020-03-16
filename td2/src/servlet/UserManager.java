@@ -39,7 +39,7 @@ public class UserManager extends HttpServlet {
 	public static Hashtable<Integer, User> getUsersTable() {
 		return usersTable;
 	}
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -92,14 +92,14 @@ public class UserManager extends HttpServlet {
 		System.out.println("UserManager - doPost - ContextPath : " + contextPath);
 		System.out.println("UserManager - usersTable size : " + usersTable.size());
 
-		
-		if ("Submit".equals(btnSumit) || "Continue".equals(btnContinue) ) {
+		if ("Submit".equals(btnSumit) || "Continue".equals(btnContinue)) {
 			System.out.println("UserManager - Bouton cliqué");
 			try {
 				// Création d'un nouvel utilisation
-				//System.out.println("UserManager - Button clicked : " request.getParameter("back"));
+				// System.out.println("UserManager - Button clicked : "
+				// request.getParameter("back"));
 				User newUser = new User(firstName, lastName, email, pwd, gender, role);
-				
+
 				// Ajout d'un utilisateur à la list usersTable
 				int count = 0;
 				count = usersTable.size();
@@ -108,11 +108,11 @@ public class UserManager extends HttpServlet {
 
 				// Afficher la liste des users
 				doGet(request, response);
-			} catch(Exception e) {
+			} catch (Exception e) {
 				System.out.println("UserManager - ADD USER FAILED !!! ERROR : " + e);
-				
+
 			}
-			
+
 		} else {
 			System.out.println("UserManager - Back to home cliqué ");
 			System.out.println(request.getParameter("back"));
