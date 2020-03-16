@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head> 
-	<title>Créer un nouveau utilisateur</title> 
-	<meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<head>
+	<title>Créer un nouveau utilisateur</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 
 <body>
@@ -16,7 +18,11 @@
 		<input type="text" id="faname" name="familyname" required />
 		<br>
 		<label> Rôle </label>
-		<input type="text" id="role" name="role" required />
+		<br>
+		<label> Admin </label>
+		<input type="radio" id="role" name="role" value="admin" />
+		<label> Etu </label>
+		<input type="radio" id="role" name="role" value="etu" />
 		<br>
 		<label> Email </label>
 		<input type="text" id="email" name="email" required />
