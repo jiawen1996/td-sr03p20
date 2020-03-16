@@ -32,4 +32,13 @@
 	<servlet-name>Connexion</servlet-name>
 	<url-pattern>/Connexion</url-pattern>
 </servlet-mapping>
+
+<servlet>
+    <servlet-name>Connexion</servlet-name>
+    <jsp-file>/connexion.html</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>Connexion</servlet-name>
+    <url-pattern>/connexion.html</url-pattern>
+</servlet-mapping>
 </web-app>
