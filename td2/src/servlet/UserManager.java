@@ -59,12 +59,12 @@ public class UserManager extends HttpServlet {
 			htmlRep += "<li>Pwd : " + u.getPwd() + "</li><br>";
 			htmlRep += "<li>Gender : " + u.getGender() + "</li><br><br><br>";
 			htmlRep += "</ul>";
-			htmlRep += "<form action=\"/td2/UserManager\" method=\"post\">";
-			htmlRep += "<input type=\"submit\" name=\"button\" value=\"Back to home\" >";
-			htmlRep += "</form>";
 		}
 
 		// show last user's data
+		htmlRep += "<form action=\"/td2/UserManager\" method=\"post\">";
+		htmlRep += "<input type=\"submit\" name=\"Continuer\" value=\"Back to home\" >";
+		htmlRep += "</form>";
 		htmlRep += "</html>";
 
 		// return reponse
@@ -78,34 +78,43 @@ public class UserManager extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// get data
+
+		// Récupérer des données depuis la requête de UserVerificaton
 		String firstName = request.getParameter("firstname");
 		String lastName = request.getParameter("familyname");
 		String email = request.getParameter("email");
 		String pwd = request.getParameter("password");
 		String gender = request.getParameter("gender");
 		String role = request.getParameter("role");
-		String button = request.getParameter("button");
+		String btnSumit = request.getParameter("submit");
+		String btnContinue = request.getParameter("continue");
 		String contextPath = request.getContextPath();
-		System.out.println("UserManager" + contextPath);
+		System.out.println("UserManager - doPost - ContextPath : " + contextPath);
+		System.out.println("UserManager - usersTable size : " + usersTable.size());
 
 		
-		if ("Submit".equals(button) || "Continue".equals(button) ) {
-			// create an user
+		if ("Submit".equals(btnSumit) || "Continue".equals(btnContinue) ) {
+			System.out.println("UserManager - Bouton cliqué");
+			try {
+				// Création d'un nouvel utilisation
+				//System.out.println("UserManager - Button clicked : " request.getParameter("back"));
+				User newUser = new User(firstName, lastName, email, pwd, gender, role);
+				
+				// Ajout d'un utilisateur à la list usersTable
+				int count = 0;
+				count = usersTable.size();
+				usersTable.put(count, newUser);
+				System.out.println("UserManager - User added : " + usersTable.get(count));
+
+				// Afficher la liste des users
+				doGet(request, response);
+			} catch(Exception e) {
+				System.out.println("UserManager - ADD USER FAILED !!! ERROR : " + e);
+				
+			}
 			
-			System.out.println(request.getParameter("back"));
-			User newUser = new User(firstName, lastName, email, pwd, gender, role);
-			
-			//add an user
-			int count = 0;
-			count = usersTable.size();
-			usersTable.put(count, newUser);
-			
-			// show result
-			doGet(request, response);
 		} else {
-			System.out.println("here");
+			System.out.println("UserManager - Back to home cliqué ");
 			System.out.println(request.getParameter("back"));
 			System.out.println(request.getParameter("back") != null);
 			RequestDispatcher rd = request.getRequestDispatcher("/");
