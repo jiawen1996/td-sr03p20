@@ -25,7 +25,6 @@ public class Connexion extends HttpServlet {
 	 */
 	public Connexion() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -33,7 +32,7 @@ public class Connexion extends HttpServlet {
 	 *      response)
 	 */
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response, boolean isAdmin)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
@@ -47,6 +46,28 @@ public class Connexion extends HttpServlet {
 		String htmlRep = "<html>";
 		htmlRep += "<h3>-------------User: " + email + "------------</h3>";
 		htmlRep += "<h3>-------------Password: " + pwd + "------------</h3>";
+		htmlRep += "</form>";
+		htmlRep += "</html>";
+		
+		response.getWriter().println(htmlRep);
+		
+		// Vérifier si l'utilisateur est un admin
+		Hashtable<Integer, User> adminsTable = UserManager.getAdminsTable();
+		boolean isAdmin = false;	
+		if ( adminsTable.size() > 0) {	
+			for (Map.Entry<Integer, User> entry : adminsTable.entrySet()) {
+				int key = entry.getKey();
+				User admin = entry.getValue();
+				String emailAdmin = admin.getEmail();
+				String pwdAdmin = admin.getPwd();
+				if (emailAdmin.equals(email) && pwdAdmin.equals(pwd)) { 
+					isAdmin = true; 
+					break;
+				}
+			}
+		}
+		
+		// Définir la page navigation pour l'admin et l'utilisateur	
 		htmlRep += "<head><title>Navigation</title></head>";
 		htmlRep += "<body>";
 		// htmlRep += "<h1>Hello " + session.getAttribute("login") + "</h1>";
@@ -101,25 +122,8 @@ public class Connexion extends HttpServlet {
 			}
 		}
 		if (doUserExist) {
-			// Vérifier si l'utilisateur est un admin
-			Hashtable<Integer, User> adminsTable = UserManager.getAdminsTable();
-			boolean isAdmin = false;
-			if (adminsTable.size() > 0) {
-				for (Map.Entry<Integer, User> entry : adminsTable.entrySet()) {
-					int key = entry.getKey();
-					User admin = entry.getValue();
-					String emailAdmin = admin.getEmail();
-					String pwdAdmin = admin.getPwd();
-					if (emailAdmin.equals(email) && pwdAdmin.equals(pwd)) {
-						isAdmin = true;
-						break;
-					}
-				}
-			}
+			doGet(request, response);
 
-			doGet(request, response, isAdmin);
 		}
-
 	}
-
 }
