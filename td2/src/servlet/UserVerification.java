@@ -35,7 +35,7 @@ public class UserVerification extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// response.getWriter().append("Served at: ").append(request.getContextPath());
 		RequestDispatcher rd = request.getRequestDispatcher("/UserManager");
 		rd.forward(request, response);
 	}
@@ -43,13 +43,14 @@ public class UserVerification extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
-	 *      
-	 * Récupérer des données depuis index.html pour vérifier s'il y a un doublons
-	 * Sinon, transférer la requête vers UserManager pour créer un nouvel utilisateur
+	 * 
+	 *      Récupérer des données depuis index.html pour vérifier s'il y a un
+	 *      doublons Sinon, transférer la requête vers UserManager pour créer un
+	 *      nouvel utilisateur
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		// Récupérer des données depuis index.html
 		String firstName = request.getParameter("firstname");
 		String lastName = request.getParameter("familyname");
@@ -59,25 +60,25 @@ public class UserVerification extends HttpServlet {
 		String role = request.getParameter("role");
 		String contextPath = request.getContextPath();
 		System.out.println("UserVerification - doPost - ContextPath : " + contextPath);
-		
-		
+
 		// Vérifier le doublon
 		Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
 		User newUser = new User(firstName, lastName, email, pwd, gender, role);
-		
-		
+
 		if (usersTable.isEmpty()) {//// Création d'un utilisateur si la liste d'utilisateur est vide
 			System.out.println("UserVerification - Créer le premier utilisateur");
 			doGet(request, response);
 		} else { //// Sinon, vérifier le doublon
 			boolean userExiste = false;
 			for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
-				
+
 				int key = entry.getKey();
 				User u = entry.getValue();
-				if (u.equals(newUser)) { // si l'utilisateur était dans la liste, envoyer ses données vers UserManager pour s'afficher
+				if (u.equals(newUser)) { // si l'utilisateur était dans la liste, envoyer ses données vers UserManager
+											// pour s'afficher
 					System.out.println("Cette utilisateur existe déjà.111");
-//						response.getWriter().println("<script>alert(\"Cette utilisateur existe déjà.\");</script>");
+					// response.getWriter().println("<script>alert(\"Cette utilisateur existe
+					// déjà.\");</script>");
 
 					String htmlRep = "<html>";
 					htmlRep += "<h3>-------------doublon------------</h3>";
@@ -95,7 +96,7 @@ public class UserVerification extends HttpServlet {
 					htmlRep += "</form>";
 					htmlRep += "</html>";
 					response.getWriter().println(htmlRep);
-					
+
 					userExiste = true;
 					break;
 				}

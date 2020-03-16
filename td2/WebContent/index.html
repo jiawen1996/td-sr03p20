@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head> 
-	<title>TODO supply a title</title> 
-	<meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<head>
+	<title>TODO supply a title</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
+
 <body>
-<h1> CREATE NEW USER </h1>
-<!-- <form action="/TD2/MyServlet" method="post"> -->
-<form action="/td2/UserVerification" method="post">
-	<label> First name </label> 
-	<input type="text" id="frname" name="firstname" required/>
-	<br>
-	<label> Family name </label> 
-	<input type="text" id="faname" name="familyname" required/>
-	<br>
-	<label> Rôle </label> 
-	<input type="text" id="role" name="role" required/>
-	<br>
-	<label> Email </label> 
-	<input type="text" id="email" name="email" required/> 
-	<br>
-	<label> Password </label> 
-	<input type="password" id="psw" name="password" required/>
-	<br>
-	<label> male </label> 
-	<input type="radio" id="male" name="gender" value="male" checked/>
-	<br>
-	<label> female </label> 
-	<input type="radio" id="female" name="gender" value="female"/>
-	<br>
-	<input type="submit" name="submit" value="Submit" >
-	<input type="submit" name="back" value="Back to home" >
-</form>
+	<h1> CREATE NEW USER </h1>
+	<!-- <form action="/TD2/MyServlet" method="post"> -->
+	<form action="/td2/UserVerification" method="post">
+		<label> First name </label>
+		<input type="text" id="frname" name="firstname" required />
+		<br>
+		<label> Family name </label>
+		<input type="text" id="faname" name="familyname" required />
+		<br>
+		<label> Rôle </label>
+		<input type="text" id="role" name="role" required />
+		<br>
+		<label> Email </label>
+		<input type="text" id="email" name="email" required />
+		<br>
+		<label> Password </label>
+		<input type="password" id="psw" name="password" required />
+		<br>
+		<label> male </label>
+		<input type="radio" id="male" name="gender" value="male" checked />
+		<br>
+		<label> female </label>
+		<input type="radio" id="female" name="gender" value="female" />
+		<br>
+		<input type="submit" name="submit" value="Submit">
+		<input type="submit" name="back" value="Back to home">
+		<input type="submit" name="login" value="Se connecter">
+	</form>
 </body>
+
 </html>
