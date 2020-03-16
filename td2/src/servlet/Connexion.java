@@ -48,26 +48,26 @@ public class Connexion extends HttpServlet {
 		htmlRep += "<h3>-------------Password: " + pwd + "------------</h3>";
 		htmlRep += "</form>";
 		htmlRep += "</html>";
-		
+
 		response.getWriter().println(htmlRep);
-		
+
 		// Vérifier si l'utilisateur est un admin
 		Hashtable<Integer, User> adminsTable = UserManager.getAdminsTable();
-		boolean isAdmin = false;	
-		if ( adminsTable.size() > 0) {	
+		boolean isAdmin = false;
+		if (adminsTable.size() > 0) {
 			for (Map.Entry<Integer, User> entry : adminsTable.entrySet()) {
 				int key = entry.getKey();
 				User admin = entry.getValue();
 				String emailAdmin = admin.getEmail();
 				String pwdAdmin = admin.getPwd();
-				if (emailAdmin.equals(email) && pwdAdmin.equals(pwd)) { 
-					isAdmin = true; 
+				if (emailAdmin.equals(email) && pwdAdmin.equals(pwd)) {
+					isAdmin = true;
 					break;
 				}
 			}
 		}
-		
-		// Définir la page navigation pour l'admin et l'utilisateur	
+
+		// Définir la page navigation pour l'admin et l'utilisateur
 		htmlRep += "<head><title>Navigation</title></head>";
 		htmlRep += "<body>";
 		// htmlRep += "<h1>Hello " + session.getAttribute("login") + "</h1>";
@@ -99,7 +99,6 @@ public class Connexion extends HttpServlet {
 		// récupérer des paramètres
 		final String email = request.getParameter("email");
 		final String pwd = request.getParameter("password");
-		final String role = request.getParameter("role");
 
 		//
 		Boolean doUserExist = false;
@@ -114,6 +113,7 @@ public class Connexion extends HttpServlet {
 				// succès
 				if (loginPwd.equals(pwd)) {
 					HttpSession session = request.getSession();
+					final String role = u.getRole();
 					session.setAttribute("email", email);
 					session.setAttribute("password", pwd);
 					session.setAttribute("role", role);
