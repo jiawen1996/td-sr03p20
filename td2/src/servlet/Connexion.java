@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -83,6 +84,8 @@ public class Connexion extends HttpServlet {
 
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
 
 		// récupérer des paramètres
 		final String email = request.getParameter("email");
@@ -108,6 +111,10 @@ public class Connexion extends HttpServlet {
 						session.setAttribute("email", email);
 						session.setAttribute("password", pwd);
 						session.setAttribute("role", role);
+					} else {
+						out.print("Désolé mot de passe incorrect");
+						RequestDispatcher rd = request.getRequestDispatcher("/connexion.html");
+						rd.include(request, response);
 					}
 					break;
 				}

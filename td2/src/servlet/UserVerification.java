@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -60,6 +61,9 @@ public class UserVerification extends HttpServlet {
 		String role = request.getParameter("role");
 		String contextPath = request.getContextPath();
 		System.out.println("UserVerification - doPost - ContextPath : " + contextPath);
+
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
 
 		// Vérifier le doublon
 		Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
