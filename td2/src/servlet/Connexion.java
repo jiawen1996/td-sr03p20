@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -86,29 +87,34 @@ public class Connexion extends HttpServlet {
 		// récupérer des paramètres
 		final String email = request.getParameter("email");
 		final String pwd = request.getParameter("password");
+		final String btnGoToLogin = request.getParameter("login");
+		if ("Se connecter".equals(btnGoToLogin)) {
+			RequestDispatcher rd = request.getRequestDispatcher("/connexion.html");
+			rd.forward(request, response);
+		} else {
 
-		//
-		Boolean doUserExist = false;
-		Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
-		for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
-			User u = entry.getValue();
-			if (u.getEmail().equals(email)) {
-				doUserExist = true;
-				final String loginPwd = u.getPwd();
-				// sauvegarder le login d’utilisateur et son rôle dans la session en cas de
-				// succès
-				if (loginPwd.equals(pwd)) {
-					HttpSession session = request.getSession();
-					final String role = u.getRole();
-					session.setAttribute("email", email);
-					session.setAttribute("password", pwd);
-					session.setAttribute("role", role);
+			Boolean doUserExist = false;
+			Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
+			for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
+				User u = entry.getValue();
+				if (u.getEmail().equals(email)) {
+					doUserExist = true;
+					final String loginPwd = u.getPwd();
+					// sauvegarder le login d’utilisateur et son rôle dans la session en cas de
+					// succès
+					if (loginPwd.equals(pwd)) {
+						HttpSession session = request.getSession();
+						final String role = u.getRole();
+						session.setAttribute("email", email);
+						session.setAttribute("password", pwd);
+						session.setAttribute("role", role);
+					}
+					break;
 				}
-				break;
 			}
-		}
-		if (doUserExist) {
-			doGet(request, response);
+			if (doUserExist) {
+				doGet(request, response);
+			}
 		}
 	}
 }
