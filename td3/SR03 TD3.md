@@ -87,8 +87,35 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 
 #### 1. Injection SQL
 
-   * [ ]  Etudiez les différentes requêtes SQL utilisées dans l’application et donnez celles qui sont vulnérables à l’injection SQL
-   * [ ]  Donnez une façon d’exploiter chaque faille trouvée
+   * [ ] Etudiez les différentes requêtes SQL utilisées dans l’application et donnez celles qui sont vulnérables à l’injection SQL
+
+   * [ ] Donnez une façon d’exploiter chaque faille trouvée
+
+     **- Authentification**
+
+     ```php
+     req =  "select nom,prenom,login,id_user,numero_compte,profil_user,solde_compte from users where login='$login' and mot_de_passe='$pwd'";
+     ```
+
+     **Code malicieux :**  `q’ or ‘q’=‘q`
+
+     ```sql
+     select nom,prenom,login,id_user,numero_compte,profil_user,solde_compte 
+       from users 
+       where login='$login' and mot_de_passe='$pwd'";
+       où : $login = linhng
+       $pwd = q’ or ‘q’=‘q’;
+     ```
+
+     **Solution :** pwd : sans espace et ni symbole  
+     **- Transfert**  
+
+     ```php
+     $req = "update users set solde_compte = solde_compte + $mt where numero_compte='$dest'";
+     $req = "update users set solde_compte = solde_compte - $mt where numero_compte='$src'";
+     ```
+
+     **Code malicieux :**  $mt négative 
 
 #### 2. Cross-site scripting (XSS)
 
