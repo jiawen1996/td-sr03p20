@@ -71,8 +71,6 @@ public class UserVerification extends HttpServlet {
 		} else { //// Sinon, vérifier le doublon
 			boolean userExiste = false;
 			for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
-
-				int key = entry.getKey();
 				User u = entry.getValue();
 				if (u.equals(newUser)) { // si l'utilisateur était dans la liste, envoyer ses données vers UserManager
 											// pour s'afficher

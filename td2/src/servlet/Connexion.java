@@ -40,35 +40,19 @@ public class Connexion extends HttpServlet {
 		HttpSession session = request.getSession();
 		Object email = session.getAttribute("email");
 		Object pwd = session.getAttribute("password");
+		Object role = session.getAttribute("role");
 		session.invalidate();
 		System.out.println(email + ":" + pwd);
 		// Définir la page navigation pour l'admin et l'utilisateur
-		String htmlRep = "<html>";
-		htmlRep += "<h3>-------------User: " + email + "------------</h3>";
-		htmlRep += "<h3>-------------Password: " + pwd + "------------</h3>";
-		htmlRep += "</form>";
-		htmlRep += "</html>";
-
-		response.getWriter().println(htmlRep);
 
 		// Vérifier si l'utilisateur est un admin
-		Hashtable<Integer, User> adminsTable = UserManager.getAdminsTable();
 		boolean isAdmin = false;
-		if (adminsTable.size() > 0) {
-			for (Map.Entry<Integer, User> entry : adminsTable.entrySet()) {
-				int key = entry.getKey();
-				User admin = entry.getValue();
-				String emailAdmin = admin.getEmail();
-				String pwdAdmin = admin.getPwd();
-				if (emailAdmin.equals(email) && pwdAdmin.equals(pwd)) {
-					isAdmin = true;
-					break;
-				}
-			}
+		if ("admin".equalsIgnoreCase(role.toString())) {
+			isAdmin = true;
 		}
 
 		// Définir la page navigation pour l'admin et l'utilisateur
-		htmlRep += "<head><title>Navigation</title></head>";
+		String htmlRep = "<head><title>Navigation</title></head>";
 		htmlRep += "<body>";
 		// htmlRep += "<h1>Hello " + session.getAttribute("login") + "</h1>";
 		htmlRep += "Hello";
@@ -104,7 +88,6 @@ public class Connexion extends HttpServlet {
 		Boolean doUserExist = false;
 		Hashtable<Integer, User> usersTable = UserManager.getUsersTable();
 		for (Map.Entry<Integer, User> entry : usersTable.entrySet()) {
-			int key = entry.getKey();
 			User u = entry.getValue();
 			if (u.getEmail().equals(email)) {
 				doUserExist = true;
