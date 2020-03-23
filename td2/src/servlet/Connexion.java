@@ -41,8 +41,6 @@ public class Connexion extends HttpServlet {
 		Object email = session.getAttribute("email");
 		Object pwd = session.getAttribute("password");
 		Object role = session.getAttribute("role");
-		session.invalidate();
-		System.out.println(email + ":" + pwd);
 		// Définir la page navigation pour l'admin et l'utilisateur
 
 		// Vérifier si l'utilisateur est un admin
@@ -65,6 +63,11 @@ public class Connexion extends HttpServlet {
 			htmlRep += "</ul>";
 			htmlRep += "</nav>";
 		}
+		htmlRep += "<form action=\"/td2/Deconnexion\" method=\"post\">";
+		htmlRep += "<br>";
+		htmlRep += "<input type=\"submit\" name=\"deconnexion\" value=\"Log out\" >";
+		htmlRep += "<br>";
+		htmlRep += "</form>";
 		htmlRep += "</body>";
 		htmlRep += "</html>";
 		response.getWriter().println(htmlRep);
@@ -106,7 +109,6 @@ public class Connexion extends HttpServlet {
 		}
 		if (doUserExist) {
 			doGet(request, response);
-
 		}
 	}
 }
