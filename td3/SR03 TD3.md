@@ -138,19 +138,17 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 
          <img src="https://i.imgur.com/h6DUjEp.png" alt="Imgur" style="zoom: 50%;" />
 
-   * [ ]  Observez ce qui se passe si des actions sont réalisées dans les deux navigateurs en parallèle. Qu’en
+   * [ ]  Observez ce qui se passe si des actions sont réalisées dans les deux navigateurs en parallèle. Qu’en déduisez-vous ?
 
-      déduisez-vous ?
-      
       ça veut dire quoi?
 
 #### 5. **Falsification de requête (CSRF)**
 
-   * [ ] Donnez une fonctionnalité du site susceptible d’être la cible d’une attaque CSRF
+   * [x] Donnez une fonctionnalité du site susceptible d’être la cible d’une attaque CSRF
 
      Les victimes peuvent être des administrateurs de site web.Le pirate peut voler le mot de passe de l’admin en envoyant du code malveillant dans la formulaire de message. Une fois que l'administrateur se connecte pour regarder le message, son cookie va être automatiquement transféré vers le pirate.
 
-   * [ ] Proposez un moyen par lequel réaliser une telle attaque
+   * [x] Proposez un moyen par lequel réaliser une telle attaque
 
      http://requestbin.net/ —— un site web pour récupérer la réponse lorsque l'admin se connecte.
 
@@ -161,6 +159,10 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 #### 6. **Vulnérabilité d'un composant**
 
    Notre site présente-t-il des vulnérabilités particulières au niveau de ses composants (serveur web, SGBD, etc....) ?
+
+Il doit utiliser quelque outils qui permet d'analyser
+
+phpmyadmin en production est fortement déconseillé, car c'est un outils trop puissant qui peux vite mal tourner s'il tombe entre de mauvaise main.
 
 #### 7. **Chiffrement des données sensibles**
 
@@ -177,6 +179,19 @@ Les exercices qui suivent ont pour but de comprendre les mécanismes de plusieu
 #### 9. **Scripts de redirection**
 
    1. Inspectez le code de notre site pour repérer les éventuelles instructions de redirection non contrôlées.
+
+      dans le fichier `myController.php` ligne 36
+
+      ```php
+      else if ($_REQUEST['action'] == 'disconnect') {
+        /* ======== DISCONNECT ======== */
+        unset($_SESSION["connected_user"]);
+        $url_redirect = $_REQUEST['loginPage'] ;
+      }
+      ```
+
+      Il y a un param `loginPage` qui peut être utilisé par le pirate pour rediriger vers un site malveillant.
+
    2. Donnez une façon d’exploiter l’une de ces redirections non contrôlées.
 
 
