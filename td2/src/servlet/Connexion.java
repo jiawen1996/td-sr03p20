@@ -2,12 +2,14 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,10 +57,24 @@ public class Connexion extends HttpServlet {
 		String htmlRep = "<head><title>Navigation</title></head>";
 		htmlRep += "<body>";
 		// htmlRep += "<h1>Hello " + session.getAttribute("login") + "</h1>";
-		htmlRep += "Hello";
 		htmlRep += "<br>";
-		htmlRep += "Connected";
 		if (isAdmin) {
+			PrintWriter out = response.getWriter();
+			out.print("Dernière connexion:");
+			//Obtenir des cookies 
+			Cookie[] cookies = request.getCookies();
+			//Si c'est la première connexion
+			for (int i = 0; cookies != null && i < cookies.length; i++) {
+				if (cookies[i].getName().equals("lastAccessTime")) {
+					long cookieValue = Long.parseLong(cookies[i].getValue());
+					Date date = new Date(cookieValue);
+					out.print(date.toString());
+				}
+			}
+			
+			//Mise à jour la date de la connexion
+			Cookie c = new Cookie("lastAccessTime", System.currentTimeMillis() + "");
+			response.addCookie(c);
 			htmlRep += "<nav> <ul>";
 			htmlRep += "<li><a href=\"index.html\">Créer un nouveau utilisateur</a></li>";
 			htmlRep += "<li><a href=\"info-users.html\">Afficher la liste des utilisateurs</a></li>";
