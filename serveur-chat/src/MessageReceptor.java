@@ -7,16 +7,23 @@ import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MessageReceptor extends Thread{
+/**
+ * une classe d'assistance pour gérer diverses demandes.
+ *
+ * @author jiawen
+ * @author linh
+ */
+public class MessageReceptor extends Thread {
 	private Socket client;
 	final DataInputStream inputStream;
 	final DataOutputStream outputStream;
-	public MessageReceptor(Socket client,DataInputStream inputStream, DataOutputStream outputStream) {
+
+	public MessageReceptor(Socket client, DataInputStream inputStream, DataOutputStream outputStream) {
 		this.client = client;
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
 	}
-	
+
 	@Override
 	public void run() {
 		String receivedMsg = "";

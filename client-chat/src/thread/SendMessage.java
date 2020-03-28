@@ -6,6 +6,13 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * un thread qui intercepte les messages saisis par l’utilisateur et les
+ * envoient au serveur à travers la socket de communication.
+ *
+ * @author jiawen
+ * @author linh
+ */
 public class SendMessage extends Thread {
 	Scanner scn = new Scanner(System.in);
 	final DataOutputStream outputStream;
@@ -22,7 +29,6 @@ public class SendMessage extends Thread {
 			try {
 				outputStream.writeUTF(sendMsg);
 			} catch (IOException ex) {
-				// TODO: handle exception
 				Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}

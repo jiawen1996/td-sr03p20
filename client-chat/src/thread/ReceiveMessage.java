@@ -6,9 +6,17 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * un thread qui va intercepter les messages envoyés par le serveur puis les
+ * afficher dans la console
+ * 
+ * @author jiawen
+ * @author linh
+ *
+ */
 public class ReceiveMessage extends Thread {
 	final DataInputStream inputStream;
-
+	
 	public ReceiveMessage(DataInputStream inputStream) {
 		this.inputStream = inputStream;
 	}
