@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 public class SendMessage extends Thread {
 	Scanner scn = new Scanner(System.in);
 	final DataOutputStream outputStream;
+	private Boolean closed = false;
 
 	public SendMessage(DataOutputStream outputStream) {
 		this.outputStream = outputStream;
@@ -16,15 +17,40 @@ public class SendMessage extends Thread {
 
 	public void run() {
 
-		while (true) {
-
-			String sendMsg = scn.nextLine();
+		while (!this.closed) {
+			synchronized (this) {
+				String sendMsg = scn.nextLine();
+				if ( sendMsg != null) {
+					try {
+						this.outputStream.write((sendMsg).getBytes());
+						this.outputStream.flush();
+						
+						if (sendMsg.equals("exit")) {
+							this.closed = true;
+							break;
+						}
+					} catch (IOException ex) {
+						// TODO: handle exception
+						Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
+						System.out.println("Échoué à envoyer le message. ");
+						break;
+					}
+				}
+			}
+			
+		}
+		
+		
+		// Fermer le flux
+		if (this.closed) {
 			try {
-				outputStream.writeUTF(sendMsg);
-			} catch (IOException ex) {
-				// TODO: handle exception
-				Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
+				this.outputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+		
 	}
 }
+
