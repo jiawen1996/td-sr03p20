@@ -117,7 +117,6 @@ public class MessageReceptor extends Thread{
     		System.out.println( this.clientName + " se déconnecte.");
     		listClient.remove(this);
     
-    
     		// Annoncer la déconnexion aux autres clients
     		synchronized(this) 
     		{
