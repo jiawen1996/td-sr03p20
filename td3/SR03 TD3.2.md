@@ -31,7 +31,7 @@ https://www.php.net/manual/fr/function.filter-input.php
 filter_input ( int $type , string $variable_name [, int $filter = FILTER_DEFAULT [, mixed $options ]] ) 
 ```
 Côté serveur
-Dans le fichier `myController.php`
+Dans le fichier `myController.php` , on aussi met des filteurs.
 
 ### Violation de contrôle d’accès
 #### Requêtes paramétrées
@@ -88,7 +88,7 @@ ini_set( 'session.cookie_httponly', 1 );
 
 ### Falsification de requête (CSRF)
 
-
+Pareil que la faille de XSS.
 
 ### Chiffrement des données sensibles
 Avant de stocker le mot de passe de l'utilisateur dans la base de données, il doit être chiffré (les fonction hash comme MD5 et SHA-1 ne sont pas recommandés). Ici, on utilise la fonction récommandée par PHP officiel. 
@@ -109,4 +109,11 @@ Aller plus loin: https://www.php.net/manual/fr/function.password-verify.php
 ### Accès aux répertoires par http
 Le droit d'access du dossier `config` est très ouvert. Donc maintenant on met `664(drw-rw-r--)` pour lui.
 ![Imgur](https://i.imgur.com/famlLqt.png)
-Mais après on trouve que cela rendra la page Web incapable de lire le contenu de `config.ini`. Donc on fait du chiffrement aussi comme 
+Mais après on trouve que cela rendra la page Web incapable de lire le contenu de `config.ini`, qui pose de problème d'accéder à la BD.
+
+A ce moment là, on ne trouve pas une solution pertinante. 
+
+Peut-être on peut éssayer:
+
+1. Si'il exist des options spéciales dans la fonction `parse_ini_file`.
+2. Chiffrer le mot de passe de l'admin avec `salt`.
