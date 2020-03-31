@@ -2,15 +2,15 @@
 
 
 
-| Faille                            | Corrections mises en place                                  |
-| --------------------------------- | ----------------------------------------------------------- |
-| Injection SQL                     | Contrôle des champs envoyés/réçus + Gestion de mot de passe |
-| Cross-site scripting (XSS)        | Contrôle des champs envoyés/réçus                           |
-| Violation de contrôle d’accès     |                                                             |
-| Violation de gestion de session   | Protection des cookies                                      |
-| Accès aux répertoires par http    | Protection des répertoires                                  |
-| Falsification de requête (CSRF)   | Contrôle des champs envoyés/réçus                           |
-| Chiffrement des données sensibles | Cryptage au niveau du stockage                              |
+| Faille | Corrections mises en place |
+| -------- | -------- |
+| Injection SQL    | Contrôle des champs envoyés/réçus + Gestion de mot de passe    |
+| Cross-site scripting (XSS)    | Contrôle des champs envoyés/réçus    |
+| Violation de contrôle d’accès | Requêtes paramétrées + Gestion de l’authentification    |
+| Violation de gestion de session | Protection des cookies|
+| Accès aux répertoires par http | Protection des répertoires |
+| Falsification de requête (CSRF) | Contrôle des champs envoyés/réçus |
+| Chiffrement des données sensibles | Cryptage au niveau du stockage |
 
 
 
@@ -34,7 +34,43 @@ Côté serveur
 Dans le fichier `myController.php`
 
 ### Violation de contrôle d’accès
-#### 
+#### Requêtes paramétrées
+A l'aide de la fonction `oci_bind_by_name`, ça nous permet de vérifier l'authentification de l'utilisateur à n’importe quel moment.
+```php
+<?php
+function connecterUser($login,$password) {
+$authentification_ok = false;
+$conn = oci_connect('myUser', 'myPwd', 'mySID');
+$stmt = oci_parse($conn, 'SELECT id FROM users WHERE login=:username AND passwd=:pwd');
+oci_bind_by_name($stmt, ':username', $login); oci_bind_by_name($stmt, ':pwd', $password);
+oci_execute($stmt);
+if (oci_fetch($stmt)) { $authentification_ok = true; }
+oci_free_statement($stmt); oci_close($conn);
+return $authentification_ok; }
+?>
+```
+https://www.php.net/manual/fr/function.oci-bind-by-name.php
+
+#### Gestion de l’authentification
+Il est important d'assurer la pérennité de l’authentification. Ç-a-d que toutes les pages doivent être soumises à authentification. Donc on doit toujours rajouter une condition avant chaque action. Par example, pour l'action de transfert, dans le fichier `myController.php`,
+
+```php
+...
+$authentification_ok = connecterUser(login, passwd)
+if ($authentification_ok) {
+    if ($_REQUEST['action'] == 'transfert') {
+              /* ======== TRANSFERT ======== */
+              if (is_numeric ($_REQUEST['montant'])) {
+                  transfert($_REQUEST['destination'],$_SESSION["connected_user"]["numero_compte"], $_REQUEST['montant']);
+                  $_SESSION["connected_user"]["solde_compte"] = $_SESSION["connected_user"]["solde_compte"] -  $_REQUEST['montant'];
+                  $url_redirect = "vw_moncompte.php?trf_ok";
+
+              } else {
+                  $url_redirect = "vw_moncompte.php?bad_mt=".$_REQUEST['montant'];
+              }
+}
+...
+```
 
 ### Violation de gestion de session
 
