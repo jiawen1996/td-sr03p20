@@ -44,7 +44,7 @@ https://docs.google.com/document/d/1xIKQtJTj-V5L2daSOMO8932G7JRYXA7ydgnnfOYud0s/
   ```sql
   mysql -u root -p
   CREATE DATABASE sr03;
-  GRANT ALL PRIVILEGES ON sr03.* TO jiawen IDENTIFIED BY '120907';
+  GRANT ALL PRIVILEGES ON BD_name TO user_name IDENTIFIED BY 'mot de passe';
   flush privileges;
   ```
 
@@ -236,6 +236,7 @@ phpmyadmin en production est fortement déconseillé, car c'est un outils trop p
 Présenter un exemple de scénario d'attaque complet d’usurpation de session d’un utilisateur sur le site sr03p20.
 On suppose que l’attaquant n’a pas accès à l’ordinateur de sa victime.
 Vous pourrez pour cet exercice : présenter un site pirate, générer des mails frauduleux, etc...
+
 ### D. Changement d’environnement technique
 Cette partie est facultative, un peu longue, mais présente tout de même un intérêt ! Pour les plus rapides d’entre vous, il est recommandé de la réaliser.
 1. Développez une copie conforme du site PHP « sr03p20 » en Java (Servlet/JSP) ; vous avez le libre choix pour le serveur Java et la base de données. Le plus important est de reproduire exactement le même fonctionnement que la version PHP
