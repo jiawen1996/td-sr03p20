@@ -21,11 +21,21 @@ public class MessageReceptor extends Thread{
 	private String clientName;
 	private DataInputStream inputStream = null;
 	private DataOutputStream outputStream = null;
-	
 	public MessageReceptor(Socket client, Hashtable<MessageReceptor, String> listClient) {
 		this.client = client;
 		this.listClient = listClient;
 		this.clientName = "";
+	}
+	
+	public void receiveObject() throws IOException, ClassNotFoundException, InterruptedException {
+		InputStream in = this.client.getInputStream();
+		 if(in.available()>0){
+			 ObjectInputStream ois = new ObjectInputStream(in);
+             Object obj = ois.readObject();
+             System.out.println("接收：\t"+obj.getClass());
+         }else{
+             Thread.sleep(10);
+         }
 	}
 	
 	
@@ -50,10 +60,18 @@ public class MessageReceptor extends Thread{
     			this.outputStream.write(("Entrer votre pseudonyme :").getBytes());
     			
     			while (true) {
-    				byte b[] = new byte[20];
-    				this.inputStream.read(b);
-    				clientName = new String(b);
+    				InputStream in = this.client.getInputStream();
+    				 if(in.available()>0){
+    					 ObjectInputStream ois = new ObjectInputStream(in);
+    		             Object obj = ois.readObject();
+    		             System.out.println("接收：\t"+obj);
+    		         }else{
+    		             Thread.sleep(10);
+    		         }
 
+    				 byte b[] = new byte[20];
+    				 this.inputStream.read(b);
+    				 clientName = new String(b);
     				if ((clientName.indexOf('@') == -1) || (clientName.indexOf('!') == -1) || this.listClient.containsValue(clientName)) {
     					
     					// Si pseudonyme unique, il va remplacer la valeur dans listClient
@@ -145,7 +163,10 @@ public class MessageReceptor extends Thread{
     	} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-    	}
+    	} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	

@@ -20,11 +20,11 @@ public class SendMessage extends Thread {
 		while (!this.closed) {
 			synchronized (this) {
 				String sendMsg = scn.nextLine();
-				if ( sendMsg != null) {
+				if (sendMsg != null) {
 					try {
 						this.outputStream.write((sendMsg).getBytes());
 						this.outputStream.flush();
-						
+
 						if (sendMsg.equals("exit")) {
 							this.closed = true;
 							break;
@@ -37,10 +37,9 @@ public class SendMessage extends Thread {
 					}
 				}
 			}
-			
+
 		}
-		
-		
+
 		// Fermer le flux
 		if (this.closed) {
 			try {
@@ -50,7 +49,6 @@ public class SendMessage extends Thread {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 }
-
