@@ -12,8 +12,8 @@
 try {
 Class.forName("com.mysql.jdbc.Driver"); // 加载数据库驱动，注册到驱动管理器
 String url = "jdbc:mysql://localhost:3306/sr03_td4?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"; // 数据库连接字符串，test为数据库名称
-String username = "root"; // 数据库用户名
-String password = "LPgjh150521"; // 数据库密码，填写自己的数据库密码
+String username = "sr03"; // 数据库用户名
+String password = "sr03"; // 数据库密码，填写自己的数据库密码
 Connection conn = DriverManager.getConnection(url,username,password); // 创建Connection连接
 // 判断数据库连接是否为空
 if(conn != null){
