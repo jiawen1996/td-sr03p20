@@ -10,7 +10,7 @@ public class ConfigConnection {
 	 public static Connection getConnection(String nomFichierProp)
 		      throws IOException, ClassNotFoundException, SQLException {
 		    Properties props = new Properties();
-		    URL urlFichierProp = ConfigConnection.class.getResource("jdbc.properties");
+		    URL urlFichierProp = ConfigConnection.class.getResource(nomFichierProp);
 		    if (urlFichierProp == null) {
 		      throw new IOException("Fichier " + nomFichierProp + " pas trouvé !");
 		    }

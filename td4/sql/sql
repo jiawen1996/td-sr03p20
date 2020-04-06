@@ -1,0 +1,53 @@
+CREATE TABLE Personne (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    lastName varchar(20),
+    firstName varchar(20),
+    login varchar(20),
+    pwd varchar(20),
+    gender varchar(20),
+    role varchar(5) CHECK (ROLE IN ('user', 'admin'))
+);
+
+CREATE VIEW VUtilisateur AS
+SELECT
+    *
+FROM
+    Personne
+WHERE
+    ROLE = 'user';
+
+CREATE VIEW VAdmin AS
+SELECT
+    *
+FROM
+    Personne
+WHERE
+    ROLE = 'admin';
+
+CREATE TABLE Forum (
+    idForum int AUTO_INCREMENT PRIMARY KEY,
+    titre varchar(50),
+    description text(200),
+    creePar int,
+    FOREIGN KEY (creePar) REFERENCES Personne (id)
+);
+
+CREATE TABLE Message (
+    idMessage int AUTO_INCREMENT,
+    body varchar(50),
+    datePubli datetime,
+    idForum int,
+    publiePar int,
+    FOREIGN KEY (idForum) REFERENCES Forum (idForum),
+    FOREIGN KEY (publiePar) REFERENCES Personne (id),
+    PRIMARY KEY (idMessage, idForum)
+);
+
+CREATE TABLE Abonne (
+    idUser int,
+    idForum int,
+    FOREIGN KEY (idUser) REFERENCES Personne (id),
+    FOREIGN KEY (idForum) REFERENCES Forum (idForum),
+    PRIMARY KEY (idUser, idForum)
+);
+
