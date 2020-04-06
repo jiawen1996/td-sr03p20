@@ -2,17 +2,26 @@ package thread;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import message.TextMessage;
+
 public class SendMessage extends Thread {
 	Scanner scn = new Scanner(System.in);
-	final DataOutputStream outputStream;
+	final ObjectOutputStream outputStream;
 	private Boolean closed = false;
 
-	public SendMessage(DataOutputStream outputStream) {
+	public SendMessage(ObjectOutputStream outputStream) {
 		this.outputStream = outputStream;
+	}
+	
+	public void sendObject(Object obj) throws IOException {
+		this.outputStream.writeObject(obj);
+		System.out.println("client send：\t" + obj);
+		this.outputStream.flush();
 	}
 
 	public void run() {
@@ -22,8 +31,9 @@ public class SendMessage extends Thread {
 				String sendMsg = scn.nextLine();
 				if (sendMsg != null) {
 					try {
-						this.outputStream.write((sendMsg).getBytes());
-						this.outputStream.flush();
+//						this.outputStream.write((sendMsg).getBytes());
+//						this.outputStream.flush();
+						this.sendObject(new TextMessage(sendMsg));
 
 						if (sendMsg.equals("exit")) {
 							this.closed = true;

@@ -21,7 +21,7 @@ public class HeartbeatAgent extends Thread {
 	}
 
 	public void sendObject(Object obj) throws IOException {
-		System.out.println("发送：\t" + obj.getClass());
+		System.out.println("HB：\t" + obj.getClass());
 		this.oos.writeObject(obj);
 		this.oos.flush();
 	}

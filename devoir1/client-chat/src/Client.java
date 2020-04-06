@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,13 +27,12 @@ public class Client {
 		System.out.println("Connected : " + s);
 
 		// Récupérer input and out streams
-		DataInputStream inputStream = new DataInputStream(s.getInputStream());
-		DataOutputStream outputStream = new DataOutputStream(s.getOutputStream());
-		ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+		ObjectOutputStream outputStream = new ObjectOutputStream(s.getOutputStream());
+		ObjectInputStream inputStream = new ObjectInputStream(s.getInputStream());
 		// Créer des thread pour traiter des messages
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
-		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(oos);
+		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
 		// Lacer les thread
 		sendMessage.start();
 		receiveMessage.start();
