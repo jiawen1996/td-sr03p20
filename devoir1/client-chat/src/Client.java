@@ -33,6 +33,7 @@ public class Client {
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
 		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
+		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
 		// Lacer les thread
 		sendMessage.start();
 		receiveMessage.start();

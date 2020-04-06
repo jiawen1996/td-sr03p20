@@ -34,11 +34,17 @@ public class MessageReceptor extends Thread {
 	public void receiveObject() throws IOException, ClassNotFoundException, InterruptedException {
 		InputStream in = this.client.getInputStream();
 		if (in.available() > 0) {
-			ObjectInputStream ois = new ObjectInputStream(in);
-			Object obj = ois.readObject();
-			System.out.println("接收：\t" + obj.getClass());
-		} else {
-			Thread.sleep(10);
+			System.out.println(in.available());
+			Object obj = inputStream.readObject();
+			System.out.println("server receive：\t" + obj);
+			if (obj instanceof HBMessage) {
+				sendObject(new HBResponse());
+
+			} else {
+				TextMessage receivedObj = (TextMessage) obj;
+				//msg = receivedObj.getMsg();
+				
+			}
 		}
 	}
 
@@ -58,7 +64,7 @@ public class MessageReceptor extends Thread {
 			outputStream = new ObjectOutputStream(client.getOutputStream());
 
 			// Récupérer le pseudonyme d'un client
-			String receivedClientName;
+			String clientName;
 
 			// Assurer qu'il n'y a qu'un seul thread qui utilise cet objet
 			synchronized (this) {
@@ -73,22 +79,18 @@ public class MessageReceptor extends Thread {
 						System.out.println("server receive：\t" + obj);
 						if (obj instanceof HBMessage) {
 							sendObject(new HBResponse());
-							;
+
 						} else {
 
-							TextMessage receivedObj = (TextMessage) this.inputStream.readObject();
-							receivedClientName = receivedObj.getMsg();
-//    				 byte b[] = new byte[20];
-//    				 this.inputStream.read(b);
-//    				 clientName = new String(b);
-							if ((receivedClientName.indexOf('@') == -1) || (receivedClientName.indexOf('!') == -1)
+							TextMessage receivedObj = (TextMessage) obj;
+							clientName = receivedObj.getMsg();
+							System.out.println("TextMessage：\t" + clientName);
+							if ((clientName.indexOf('@') == -1) || (clientName.indexOf('!') == -1)
 									|| this.listClient.containsValue(clientName)) {
 
 								// Si pseudonyme unique, il va remplacer la valeur dans listClient
 								if (this.listClient.containsValue(clientName)) {
-									this.outputStream
-											.write(("Votre pseudo a été utilisé. Nouveau pseudonyme : ").getBytes());
-									this.outputStream.flush(); // sauvegarder le flux de messages
+									this.sendObject(new TextMessage("Votre pseudo a été utilisé. Nouveau pseudonyme : "));
 									continue;
 								} else {
 									this.listClient.put(this, clientName);
@@ -110,18 +112,13 @@ public class MessageReceptor extends Thread {
 			System.out.println("Pseudo de nouveau client : " + this.clientName);
 			this.sendObject(new TextMessage(
 					this.clientName + " a rejoint la conversation. Tapez 'exit' pour se déconnecter \n"));
-//			this.outputStream.write(
-//					(this.clientName + " a rejoint la conversation. Tapez 'exit' pour se déconnecter \n").getBytes());
-			this.outputStream.write(
-					("------------------------------------------------------------------------------").getBytes());
-			this.outputStream.flush();
+			this.sendObject(new TextMessage("------------------------------------------------------------------------------"));
 
 			// Annoncer aux autres clients
 			synchronized (this) {
 				for (MessageReceptor client : listClient.keySet()) {
 					if (client != null && client != this) {
-						client.outputStream.write((this.clientName + " a  rejoint la conversation").getBytes());
-						this.outputStream.flush();
+						this.sendObject(new TextMessage(this.clientName + " a  rejoint la conversation"));
 					}
 				}
 			}
@@ -129,11 +126,22 @@ public class MessageReceptor extends Thread {
 			// Commencer la conversation
 			// Quit la conversation lorsque le serveur reçoit un message "exit"
 			while (true) {
+				String msg = "";
+				InputStream in = this.client.getInputStream();
+				boolean didReceiveMsg = false;
+				while(!didReceiveMsg) {
+					Object obj = inputStream.readObject();
+					System.out.println("server receive：\t" + obj);
+					if (obj instanceof HBMessage) {
+						sendObject(new HBResponse());
 
-				// Récupérer le message
-				byte b[] = new byte[1024];
-				this.inputStream.read(b);
-				String msg = new String(b);
+					} else {
+						TextMessage receivedObj = (TextMessage) obj;
+						msg = receivedObj.getMsg();
+						didReceiveMsg = true;
+						break;
+					}
+				}
 
 				// Quitter la conversation
 				if (msg.startsWith("exit")) {
@@ -146,8 +154,7 @@ public class MessageReceptor extends Thread {
 			}
 
 			// Terminer la session
-			this.outputStream.write(("Vous avez quitté la conversation").getBytes());
-			this.outputStream.flush();
+			this.sendObject(new TextMessage("Vous avez quitté la conversation"));
 			System.out.println(this.clientName + " se déconnecte.");
 			listClient.remove(this);
 
@@ -157,9 +164,7 @@ public class MessageReceptor extends Thread {
 					for (MessageReceptor client : listClient.keySet()) {
 
 						if (client != null && client != this && client.clientName != null) {
-							client.outputStream
-									.write(("*** " + this.clientName + " a quitté la conversation ***").getBytes());
-							this.outputStream.flush();
+							this.sendObject(new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
 						}
 					}
 				}
@@ -196,8 +201,7 @@ public class MessageReceptor extends Thread {
 			for (MessageReceptor client : listClient.keySet()) {
 
 				if (client != null && client.clientName != null && client.clientName != this.clientName) {
-					client.outputStream.write((clientName + " a dit : " + msg).getBytes());
-					client.outputStream.flush();
+					this.sendObject(new TextMessage(clientName + " a dit : " + msg));
 				}
 			}
 
