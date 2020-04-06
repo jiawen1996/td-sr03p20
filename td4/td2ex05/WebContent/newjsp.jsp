@@ -12,9 +12,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%! declaration ;[ declaration ;]+ ... %> <%--syntax--%>
+<%--         <%! declaration ;[ declaration ;]+ ... %> syntax
         <%! int i = 0; %>
         <%! int a, b, c; %>
         <%! Circle a = new Circle(2.0);%>
-    </body>
+    </body> --%>
 </html>
