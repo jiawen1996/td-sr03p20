@@ -1,80 +1,42 @@
 package components;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class User {
-	private String firstName, lastName, email, pwd, gender;
-	private String role;
+public class User extends Person{
+	private ArrayList<Forum> listFollowingForum;
 
 	// CONSTRUCTEUR
 	public User(String fname, String lname, String email, String pwd, String gender, String role) {
-		this.firstName = fname;
-		this.lastName = lname;
-		this.email = email;
-		this.pwd = pwd;
-		this.gender = gender;
-		this.role = role;
+		super(fname, lname, email, pwd, gender, role);
+		this.listFollowingForum = new ArrayList<Forum>();
 	}
 
-	// RÉCUPÉRER DES DONNÉES
-	public String getFirstName() {
-		return this.firstName;
+	// MANIPULATE FORUM
+	/**
+	 * Récupérer la liste de forums abonnés
+	 * @return
+	 */
+	public ArrayList<Forum> getlistFollowingForum() {
+		return listFollowingForum;
+	}
+	
+	/**
+	 * Abonner un forum en l'ajoutant dans la liste listFollowingForum 
+	 * @param forum
+	 */
+	public Boolean follow(Forum forum) {
+		return listFollowingForum.add(forum);
 	}
 
-	public String getLastName() {
-		return this.lastName;
+	/**
+	 * Désabonner un forum en le supprimer dans la listz
+	 * @param forum
+	 * @return
+	 */
+	public Boolean unFollow(Forum forum) {
+		return listFollowingForum.remove(forum);
 	}
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public String getPwd() {
-		return this.pwd;
-	}
-
-	public String getGender() {
-		return this.gender;
-	}
-
-	public String getRole() {
-		return this.role;
-	}
-
-	public String getUser() {
-		return "First name : " + this.firstName + " Last Name : " + this.lastName + " Email : " + this.email + " Pwd : "
-				+ this.pwd + " Gender : " + this.gender;
-	}
-
-	// VÉRIFICATION SI LE DOUBLONS
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-
-		if (obj == null) {
-			return false;
-		}
-
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final User other = (User) obj;
-		if (!Objects.equals(this.lastName, other.lastName)) {
-			return false;
-		}
-		if (!Objects.equals(this.firstName, other.firstName)) {
-			return false;
-		}
-		return true;
-
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
+	// MESSAGE
 }
