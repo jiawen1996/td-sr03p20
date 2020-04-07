@@ -28,7 +28,7 @@ public class ReceiveMessage extends Thread {
 		Object obj = this.inputStream.readObject();
 		if (obj instanceof HBResponse) {
 			if (obj.toString().equals("ACK")) {
-				System.out.println("Server is alive");
+//				System.out.println("Server is alive");
 			}else {
 				
 				System.out.println("fail" + obj);

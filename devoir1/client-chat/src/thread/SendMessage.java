@@ -20,7 +20,6 @@ public class SendMessage extends Thread {
 	
 	public void sendObject(Object obj) throws IOException {
 		this.outputStream.writeObject(obj);
-		System.out.println("client send：\t" + obj);
 		this.outputStream.flush();
 	}
 

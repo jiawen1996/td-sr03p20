@@ -21,7 +21,6 @@ public class HeartbeatAgent extends Thread {
 	}
 
 	public void sendObject(Object obj) throws IOException {
-		System.out.println("HB：\t" + obj.getClass());
 		this.oos.writeObject(obj);
 		this.oos.flush();
 	}
@@ -30,7 +29,7 @@ public class HeartbeatAgent extends Thread {
 		System.out.println("Running " + DEFAULT_NAME);
 		try {
 			while (!this.closed) {
-				System.out.println("Thread: " + DEFAULT_NAME + ", " + "I'm alive");
+//				System.out.println("Thread: " + DEFAULT_NAME + ", " + "I'm alive");
 				// Let the thread sleep for a while.
 				this.sendObject(new HBMessage());
 				Thread.sleep(DEFAULT_SAMPLING_PERIOD * 1000);
