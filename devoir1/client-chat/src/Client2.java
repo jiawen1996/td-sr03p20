@@ -19,9 +19,6 @@ public class Client2 {
 
 	public static void main(String args[]) throws UnknownHostException, IOException {
 
-		// Récupérer l'IP de localhost
-//        InetAddress ip = InetAddress.getByName("localhost"); 
-
 		// Établir la connexion
 		Socket s = new Socket("localhost", ServerPort);
 		System.out.println("Connected : " + s);
@@ -32,12 +29,9 @@ public class Client2 {
 		// Créer des thread pour traiter des messages
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
-//		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
-//		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
 		// Lacer les thread
 		sendMessage.start();
 		receiveMessage.start();
-//		heartbeatAgent.start();
 
 	}
 }

@@ -62,8 +62,7 @@ public class SendMessage extends Thread {
 						}
 					} catch (IOException ex) {
 						// TODO: handle exception
-//						terminerSocket();
-//						Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
+						Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
 						System.out.println("Échoué à envoyer le message. ");
 						break;
 					}

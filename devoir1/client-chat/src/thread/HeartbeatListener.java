@@ -8,7 +8,7 @@ import exception.PanneServeurException;
 class HeartbeatListener extends Thread{
 	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Boolean closed = false;
-	private long timeout = 10 * 1000;
+	private long timeout = 15 * 1000;
 
 	public Boolean didClientDie() {
 		return this.closed;

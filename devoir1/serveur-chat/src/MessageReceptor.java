@@ -13,6 +13,10 @@ import message.HBMessage;
 import message.HBResponse;
 import message.TextMessage;
 
+/**
+ * Un thead qui intercepte tout message envoyé dans cet objet socket récemment stocké
+ * 
+ */
 public class MessageReceptor extends Thread {
 
 	private static Hashtable<MessageReceptor, String> listClient = new Hashtable<MessageReceptor, String>();
@@ -29,22 +33,38 @@ public class MessageReceptor extends Thread {
 		this.clientName = "";
 	}
 
+	/**
+	 * Envoyer l'acqiuttement de Heartbeat au client
+	 * 
+	 * @throws IOException
+	 */
 	public void hbMsgHandler() throws IOException {
 		sendObject(this, new HBResponse());
 		hbMsgList.add(this.clientName);
 	}
-
+	
+	/**
+	 * Envoyer l'objet de message à la destination
+	 * 
+	 * @param destination
+	 * @param obj
+	 * @throws IOException
+	 */
 	public void sendObject(MessageReceptor destination, Object obj) throws IOException {
 		destination.outputStream.writeObject(obj);
 		destination.outputStream.flush();
 	}
-
+	
+	/**
+	 * Annoncer la déconnexion aux autres clients et terminer les I/O flux et le socket
+	 * 
+	 * @throws IOException
+	 */
 	public void terminierSocket() {
 		try {
 			System.out.println(this.clientName + " se déconnecte.");
 			listClient.remove(this);
 
-			// Annoncer la déconnexion aux autres clients
 			synchronized (this) {
 				if (!listClient.isEmpty()) {
 					for (MessageReceptor client : listClient.keySet()) {
@@ -53,7 +73,6 @@ public class MessageReceptor extends Thread {
 								this.sendObject(client,
 										new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
 							} catch (IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						}
@@ -67,6 +86,26 @@ public class MessageReceptor extends Thread {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+
+	/**
+	 * Diffuser le message aux autres clients
+	 * 
+	 * @param msg
+	 * @param clientName
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	private void broadcast(String msg, String clientName) throws IOException, ClassNotFoundException {
+		synchronized (this) {
+			for (MessageReceptor client : listClient.keySet()) {
+				if (client != null && client.clientName != null && client.clientName != this.clientName) {
+					this.sendObject(client, new TextMessage(clientName + " a dit : " + msg));
+				}
+			}
+
+			System.out.println("Broadcast message a été envoyé par " + this.clientName);
 		}
 	}
 
@@ -91,6 +130,7 @@ public class MessageReceptor extends Thread {
 				while (!isClientNameInitialized) {
 					if (in.available() > 0) {
 						Object obj = inputStream.readObject();
+						//
 						if (obj instanceof HBMessage) {
 							hbMsgHandler();
 						} else {
@@ -183,23 +223,4 @@ public class MessageReceptor extends Thread {
 		}
 	}
 
-	/**
-	 * Diffuser le message aux autres clients
-	 * 
-	 * @param msg
-	 * @param clientName
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 */
-	private void broadcast(String msg, String clientName) throws IOException, ClassNotFoundException {
-		synchronized (this) {
-			for (MessageReceptor client : listClient.keySet()) {
-				if (client != null && client.clientName != null && client.clientName != this.clientName) {
-					this.sendObject(client, new TextMessage(clientName + " a dit : " + msg));
-				}
-			}
-
-			System.out.println("Broadcast message a été envoyé par " + this.clientName);
-		}
-	}
 }
