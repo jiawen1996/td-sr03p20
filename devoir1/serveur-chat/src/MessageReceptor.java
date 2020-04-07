@@ -47,10 +47,12 @@ public class MessageReceptor extends Thread {
 			// Récupérer input and out streams de ce socket
 			inputStream = new ObjectInputStream(client.getInputStream());
 			outputStream = new ObjectOutputStream(client.getOutputStream());
+			
 			// Démarrer hbListener
-			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList);
+			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList,this.closed);
 			hbListener.setPriority(Thread.MIN_PRIORITY);
 			hbListener.start();
+			
 			// Récupérer le pseudonyme d'un client
 			String clientName;
 
@@ -121,6 +123,7 @@ public class MessageReceptor extends Thread {
 					String msg = receivedObj.getMsg();
 					// Quitter la conversation
 					if (msg.startsWith("exit")) {
+						hbListener.setClosed(true);
 						break;
 					} else {
 

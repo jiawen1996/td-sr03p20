@@ -24,7 +24,7 @@ public class SendMessage extends Thread {
 	}
 
 	public void run() {
-		
+		// Démarrer le heartbeatAgent dans le thread de sendMessage
 		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream, this.closed);
 		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
 		heartbeatAgent.start();
@@ -37,7 +37,9 @@ public class SendMessage extends Thread {
 						this.sendObject(new TextMessage(sendMsg));
 
 						if (sendMsg.equals("exit")) {
+							//Fermer le flux de SendMessage
 							this.closed = true;
+							//Fermer le flux de heartbeatAgent
 							heartbeatAgent.setClosed(true);
 							break;
 						}
@@ -54,6 +56,13 @@ public class SendMessage extends Thread {
 
 		// Fermer le flux
 		if (this.closed) {
+			// Attendre que le serveur ferme la connexion
+			try {
+				this.sleep(20);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			try {
 				this.outputStream.close();
 			} catch (IOException e) {

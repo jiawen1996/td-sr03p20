@@ -32,12 +32,12 @@ public class Client2 {
 		// Créer des thread pour traiter des messages
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
-		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
-		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
+//		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
+//		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
 		// Lacer les thread
 		sendMessage.start();
 		receiveMessage.start();
-		heartbeatAgent.start();
+//		heartbeatAgent.start();
 
 	}
 }

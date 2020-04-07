@@ -55,6 +55,7 @@ public class ReceiveMessage extends Thread {
 
 						// Quitter la boucle
 						if (this.receivedMsg.equals("Vous avez quitté la conversation")) {
+							System.out.println("Bye!");
 							this.closed = true;
 							break;
 						} else {
