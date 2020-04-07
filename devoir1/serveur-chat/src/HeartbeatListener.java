@@ -6,7 +6,7 @@ public class HeartbeatListener extends Thread {
 	private Boolean closed = false;
 	private long timeout = 10 * 1000;
 
-	public HeartbeatListener(Queue<String> hbMsgList, Boolean closed) {
+	public HeartbeatListener(Queue<String> hbMsgList) {
 		this.hbMsgList = hbMsgList;
 		this.closed = closed;
 	}

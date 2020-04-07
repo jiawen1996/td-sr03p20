@@ -30,12 +30,10 @@ public class SendMessage extends Thread {
 				String sendMsg = scn.nextLine();
 				if (sendMsg != null) {
 					try {
-//						this.outputStream.write((sendMsg).getBytes());
-//						this.outputStream.flush();
 						this.sendObject(new TextMessage(sendMsg));
 
 						if (sendMsg.equals("exit")) {
-							this.closed = true;
+//							this.closed = true;
 							break;
 						}
 					} catch (IOException ex) {

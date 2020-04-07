@@ -48,7 +48,8 @@ public class MessageReceptor extends Thread {
 			inputStream = new ObjectInputStream(client.getInputStream());
 			outputStream = new ObjectOutputStream(client.getOutputStream());
 			// Démarrer hbListener
-			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList, closed);
+			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList);
+			hbListener.setPriority(Thread.MIN_PRIORITY);
 			hbListener.start();
 			// Récupérer le pseudonyme d'un client
 			String clientName;
@@ -96,7 +97,7 @@ public class MessageReceptor extends Thread {
 			System.out.println("Pseudo de nouveau client : " + this.clientName);
 			this.sendObject(this, new TextMessage(
 					this.clientName + " a rejoint la conversation. Tapez 'exit' pour se déconnecter \n"));
-			this.sendObject(this, 
+			this.sendObject(this,
 					new TextMessage("------------------------------------------------------------------------------"));
 
 			// Annoncer aux autres clients
@@ -109,7 +110,7 @@ public class MessageReceptor extends Thread {
 			}
 
 			// Commencer la conversation
-			// Quit la conversation lorsque le serveur reçoit un message "exit" 
+			// Quit la conversation lorsque le serveur reçoit un message "exit"
 			while (true) {
 				String msg = "";
 				boolean didReceiveMsg = false;
@@ -126,7 +127,7 @@ public class MessageReceptor extends Thread {
 				}
 
 				// Quitter la conversation
-				if (msg.startsWith("exit") || this.closed) {
+				if (msg.startsWith("exit")) {
 					break;
 				} else {
 
@@ -159,14 +160,6 @@ public class MessageReceptor extends Thread {
 			this.client.close();
 
 		} catch (IOException e) {
-			try {
-				this.inputStream.close();
-				this.outputStream.close();
-				this.client.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			System.out.println(this.clientName + this.closed);
 			System.out.println("La session de " + this.clientName + " a terminé.");
 
