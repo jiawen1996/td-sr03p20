@@ -9,10 +9,8 @@ import java.util.logging.Logger;
 import message.HBMessage;
 
 public class HeartbeatAgent extends Thread {
-	private int DEFAULT_SAMPLING_PERIOD = 5; // seconds
+	private int DEFAULT_SAMPLING_PERIOD = 6; // seconds
 	private String DEFAULT_NAME = "HeartbeatAgent";
-	long checkDelay = 10;
-	long keepAliveDelay = 2000;
 	private Boolean closed = false;
 	final ObjectOutputStream oos;
 
@@ -43,7 +41,7 @@ public class HeartbeatAgent extends Thread {
 			System.out.println("Thread " + DEFAULT_NAME + " interrupted.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 //		System.out.println("Thread " + DEFAULT_NAME + " exiting.");
 
