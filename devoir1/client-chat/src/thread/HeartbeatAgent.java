@@ -16,13 +16,18 @@ public class HeartbeatAgent extends Thread {
 	private Boolean closed = false;
 	final ObjectOutputStream oos;
 
-	public HeartbeatAgent(ObjectOutputStream oos) {
+	public HeartbeatAgent(ObjectOutputStream oos, Boolean closed) {
 		this.oos = oos;
+		this.closed = closed;
 	}
 
 	public void sendObject(Object obj) throws IOException {
 		this.oos.writeObject(obj);
 		this.oos.flush();
+	}
+	
+	public void setClosed(Boolean newClosed) {
+		this.closed = newClosed;
 	}
 
 	public void run() {

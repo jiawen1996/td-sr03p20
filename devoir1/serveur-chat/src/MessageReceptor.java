@@ -112,27 +112,21 @@ public class MessageReceptor extends Thread {
 			// Commencer la conversation
 			// Quit la conversation lorsque le serveur reçoit un message "exit"
 			while (true) {
-				String msg = "";
-				boolean didReceiveMsg = false;
-				while (!didReceiveMsg) {
-					Object obj = inputStream.readObject();
-					if (obj instanceof HBMessage) {
-						hbMsgHandler();
-					} else {
-						TextMessage receivedObj = (TextMessage) obj;
-						msg = receivedObj.getMsg();
-						didReceiveMsg = true;
-						break;
-					}
-				}
-
-				// Quitter la conversation
-				if (msg.startsWith("exit")) {
-					break;
+				Object obj = inputStream.readObject();
+				if (obj instanceof HBMessage) {
+					hbMsgHandler();
 				} else {
 
-					// Diffuser le message aux autres clients
-					broadcast(msg, this.clientName);
+					TextMessage receivedObj = (TextMessage) obj;
+					String msg = receivedObj.getMsg();
+					// Quitter la conversation
+					if (msg.startsWith("exit")) {
+						break;
+					} else {
+
+						// Diffuser le message aux autres clients
+						broadcast(msg, this.clientName);
+					}
 				}
 			}
 
@@ -146,7 +140,7 @@ public class MessageReceptor extends Thread {
 				if (!listClient.isEmpty()) {
 					for (MessageReceptor client : listClient.keySet()) {
 						if (client != null && client != this && client.clientName != null) {
-							this.sendObject(this,
+							this.sendObject(client,
 									new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
 						}
 					}

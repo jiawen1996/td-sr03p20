@@ -24,7 +24,11 @@ public class SendMessage extends Thread {
 	}
 
 	public void run() {
-
+		
+		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream, this.closed);
+		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
+		heartbeatAgent.start();
+		
 		while (!this.closed) {
 			synchronized (this) {
 				String sendMsg = scn.nextLine();
@@ -33,7 +37,8 @@ public class SendMessage extends Thread {
 						this.sendObject(new TextMessage(sendMsg));
 
 						if (sendMsg.equals("exit")) {
-//							this.closed = true;
+							this.closed = true;
+							heartbeatAgent.setClosed(true);
 							break;
 						}
 					} catch (IOException ex) {
