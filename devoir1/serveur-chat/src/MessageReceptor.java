@@ -52,7 +52,7 @@ public class MessageReceptor extends Thread {
 						if (client != null && client != this && client.clientName != null) {
 							try {
 								this.sendObject(client,
-										new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
+										new TextMessage("*** " + client.clientName + " a quitté la conversation ***"));
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -158,6 +158,7 @@ public class MessageReceptor extends Thread {
 						String msg = receivedObj.getMsg();
 						// Quitter la conversation
 						if (msg.startsWith("exit")) {
+							this.closed = true;
 							hbListener.setHBListenrClosed(true);
 							break;
 						} else {
@@ -170,9 +171,10 @@ public class MessageReceptor extends Thread {
 			}
 
 			// Terminer la session
-
-			this.sendObject(this, new TextMessage("Vous avez quitté la conversation"));
-			terminierSocket();
+			if(this.closed) {
+				this.sendObject(this, new TextMessage("Vous avez quitté la conversation"));
+				terminierSocket();
+			}
 
 		} catch (IOException e) {
 			terminierSocket();

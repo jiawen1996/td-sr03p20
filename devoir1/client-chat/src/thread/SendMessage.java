@@ -22,6 +22,22 @@ public class SendMessage extends Thread {
 		this.outputStream.writeObject(obj);
 		this.outputStream.flush();
 	}
+	
+	public void terminerSocket() {
+		// Attendre que le serveur ferme la connexion
+		try {
+			this.sleep(20);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			this.outputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void run() {
 		// Démarrer le heartbeatAgent dans le thread de sendMessage
@@ -56,19 +72,7 @@ public class SendMessage extends Thread {
 
 		// Fermer le flux
 		if (this.closed) {
-			// Attendre que le serveur ferme la connexion
-			try {
-				this.sleep(20);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				this.outputStream.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			terminerSocket();
 		}
 
 	}

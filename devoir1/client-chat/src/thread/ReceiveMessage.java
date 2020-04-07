@@ -29,52 +29,18 @@ public class ReceiveMessage extends Thread {
 		if (obj instanceof HBResponse) {
 			if (obj.toString().equals("ACK")) {
 //				System.out.println("Server is alive");
-			}else {
-				
+			} else {
+
 				System.out.println("fail" + obj);
 			}
 		} else {
 			TextMessage receivedObj = (TextMessage) obj;
 			this.receivedMsg = receivedObj.getMsg();
 		}
+
 	}
 
-	public void run() {
-
-		// Récupérer les messages jusqu'à quand il reçoit le message de fin
-		while (!this.closed) {
-
-			try {
-//				byte b[] = new byte[1024];
-//				this.inputStream.read(b);
-				interpretMessage();
-				// Recevoir le message entrant
-				if (this.receivedMsg != null) {
-
-					synchronized (this) {
-
-						// Quitter la boucle
-						if (this.receivedMsg.equals("Vous avez quitté la conversation")) {
-							System.out.println("Bye!");
-							this.closed = true;
-							break;
-						} else {
-							System.out.println(this.receivedMsg);
-							this.receivedMsg = null;
-						}
-					}
-				}
-
-			} catch (IOException ex) {
-				Logger.getLogger(SendMessage.class.getName()).log(Level.SEVERE, null, ex);
-				System.out.println(" Message reçu est erroné ");
-				break;
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
+	public void terminerSocket() {
 		// Attendre que le serveur ferme la connexion
 		try {
 			this.sleep(20);
@@ -84,13 +50,54 @@ public class ReceiveMessage extends Thread {
 		}
 
 		// Fermer la connexion
-		if (this.closed) {
-			try {
-				this.inputStream.close();
-				this.client.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			this.inputStream.close();
+			this.client.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run() {
+		try {
+			// Récupérer les messages jusqu'à quand il reçoit le message de fin
+			while (!this.closed) {
+
+				try {
+					interpretMessage();
+					// Recevoir le message entrant
+					if (this.receivedMsg != null) {
+
+						synchronized (this) {
+
+							// Quitter la boucle
+							if (this.receivedMsg.equals("Vous avez quitté la conversation")) {
+								System.out.println("Bye!");
+								this.closed = true;
+								break;
+							} else {
+								System.out.println(this.receivedMsg);
+								this.receivedMsg = null;
+							}
+						}
+					}
+
+				} catch (IOException ex) {
+					terminerSocket();
+					System.out.println(" Message reçu est erroné ");
+					break;
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
+			if(this.closed) {
+				terminerSocket();
+			}
+		} catch (Exception e) {
+			System.out.println("server die");
+			// TODO: handle exception
 		}
 	}
 }
