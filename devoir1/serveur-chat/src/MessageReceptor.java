@@ -1,17 +1,13 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import message.HBMessage;
 import message.HBResponse;
@@ -20,10 +16,12 @@ import message.TextMessage;
 public class MessageReceptor extends Thread {
 
 	private static Hashtable<MessageReceptor, String> listClient = new Hashtable<MessageReceptor, String>();
+	private static Queue<Long> hbMsgList = new LinkedList<>();
 	private Socket client;
 	private String clientName;
 	private ObjectInputStream inputStream = null;
 	private ObjectOutputStream outputStream = null;
+	private Boolean closed = false;
 
 	public MessageReceptor(Socket client, Hashtable<MessageReceptor, String> listClient) {
 		this.client = client;
@@ -31,21 +29,12 @@ public class MessageReceptor extends Thread {
 		this.clientName = "";
 	}
 
-	public void receiveObject() throws IOException, ClassNotFoundException, InterruptedException {
-		InputStream in = this.client.getInputStream();
-		if (in.available() > 0) {
-			System.out.println(in.available());
-			Object obj = inputStream.readObject();
-			System.out.println("server receive：\t" + obj);
-			if (obj instanceof HBMessage) {
-				sendObject(new HBResponse());
 
-			} else {
-				TextMessage receivedObj = (TextMessage) obj;
-				//msg = receivedObj.getMsg();
-				
-			}
-		}
+	public void hbMsgHandler() throws IOException {
+		sendObject(new HBResponse());
+		System.out.println("hbMsgList \t" + System.currentTimeMillis());
+		hbMsgList.add(System.currentTimeMillis());
+
 	}
 
 	public void sendObject(Object obj) throws IOException {
@@ -62,7 +51,9 @@ public class MessageReceptor extends Thread {
 			// Récupérer input and out streams de ce socket
 			inputStream = new ObjectInputStream(client.getInputStream());
 			outputStream = new ObjectOutputStream(client.getOutputStream());
-
+			// Démarrer hbListener
+			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList, closed);
+			hbListener.start();
 			// Récupérer le pseudonyme d'un client
 			String clientName;
 
@@ -74,12 +65,10 @@ public class MessageReceptor extends Thread {
 				boolean isClientNameInitialized = false;
 				while (!isClientNameInitialized) {
 					if (in.available() > 0) {
-						System.out.println(in.available());
 						Object obj = inputStream.readObject();
 						System.out.println("server receive：\t" + obj);
 						if (obj instanceof HBMessage) {
-							sendObject(new HBResponse());
-
+							hbMsgHandler();
 						} else {
 
 							TextMessage receivedObj = (TextMessage) obj;
@@ -90,7 +79,8 @@ public class MessageReceptor extends Thread {
 
 								// Si pseudonyme unique, il va remplacer la valeur dans listClient
 								if (this.listClient.containsValue(clientName)) {
-									this.sendObject(new TextMessage("Votre pseudo a été utilisé. Nouveau pseudonyme : "));
+									this.sendObject(
+											new TextMessage("Votre pseudo a été utilisé. Nouveau pseudonyme : "));
 									continue;
 								} else {
 									this.listClient.put(this, clientName);
@@ -112,7 +102,8 @@ public class MessageReceptor extends Thread {
 			System.out.println("Pseudo de nouveau client : " + this.clientName);
 			this.sendObject(new TextMessage(
 					this.clientName + " a rejoint la conversation. Tapez 'exit' pour se déconnecter \n"));
-			this.sendObject(new TextMessage("------------------------------------------------------------------------------"));
+			this.sendObject(
+					new TextMessage("------------------------------------------------------------------------------"));
 
 			// Annoncer aux autres clients
 			synchronized (this) {
@@ -127,14 +118,12 @@ public class MessageReceptor extends Thread {
 			// Quit la conversation lorsque le serveur reçoit un message "exit"
 			while (true) {
 				String msg = "";
-				InputStream in = this.client.getInputStream();
 				boolean didReceiveMsg = false;
-				while(!didReceiveMsg) {
+				while (!didReceiveMsg) {
 					Object obj = inputStream.readObject();
 					System.out.println("server receive：\t" + obj);
 					if (obj instanceof HBMessage) {
-						sendObject(new HBResponse());
-
+						hbMsgHandler();
 					} else {
 						TextMessage receivedObj = (TextMessage) obj;
 						msg = receivedObj.getMsg();
@@ -162,9 +151,9 @@ public class MessageReceptor extends Thread {
 			synchronized (this) {
 				if (!listClient.isEmpty()) {
 					for (MessageReceptor client : listClient.keySet()) {
-
 						if (client != null && client != this && client.clientName != null) {
-							this.sendObject(new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
+							this.sendObject(
+									new TextMessage("*** " + this.clientName + " a quitté la conversation ***"));
 						}
 					}
 				}
@@ -199,7 +188,6 @@ public class MessageReceptor extends Thread {
 	private void broadcast(String msg, String clientName) throws IOException, ClassNotFoundException {
 		synchronized (this) {
 			for (MessageReceptor client : listClient.keySet()) {
-
 				if (client != null && client.clientName != null && client.clientName != this.clientName) {
 					this.sendObject(new TextMessage(clientName + " a dit : " + msg));
 				}

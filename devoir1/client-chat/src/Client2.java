@@ -1,5 +1,6 @@
-
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.UnknownHostException;
@@ -17,29 +18,26 @@ public class Client2 {
 	private static boolean closed = false; // Signal si le client a quitté
 
 	public static void main(String args[]) throws UnknownHostException, IOException {
-		
-		
+
 		// Récupérer l'IP de localhost
 //        InetAddress ip = InetAddress.getByName("localhost"); 
 
-		
 		// Établir la connexion
 		Socket s = new Socket("localhost", ServerPort);
 		System.out.println("Connected : " + s);
-				
 
 		// Récupérer input and out streams
-		DataInputStream inputStream = new DataInputStream(s.getInputStream());
-		DataOutputStream outputStream = new DataOutputStream(s.getOutputStream());
-
-		
-		// Créer des thread pour traiter des messages 
+		ObjectOutputStream outputStream = new ObjectOutputStream(s.getOutputStream());
+		ObjectInputStream inputStream = new ObjectInputStream(s.getInputStream());
+		// Créer des thread pour traiter des messages
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
-		
+		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream);
+		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
 		// Lacer les thread
 		sendMessage.start();
 		receiveMessage.start();
+		heartbeatAgent.start();
 
 	}
 }
