@@ -1,42 +1,41 @@
+package thread;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
-import exception.PanneClientException;
+import exception.PanneServeurException;
 
-public class HeartbeatListener extends Thread {
+class HeartbeatListener extends Thread{
 	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Boolean closed = false;
 	private long timeout = 10 * 1000;
-	final private String clientName;
 
 	public Boolean didClientDie() {
 		return this.closed;
 	}
 
-	public HeartbeatListener(Queue<String> hbMsgList, Boolean closed, String clientName) {
+	public HeartbeatListener(Queue<String> hbMsgList, Boolean closed) {
 		this.hbMsgList = hbMsgList;
 		this.closed = closed;
-		this.clientName = clientName;
 	}
 
 	public void setHBListenrClosed(Boolean newClosed) {
 		this.closed = newClosed;
 	}
 
-	public void checkClientAlive() throws PanneClientException {
+	public void checkServeurAlive() throws PanneServeurException {
 		// Si la queue de HBMsg n'est pas vide -> cette client est active
 		if (hbMsgList.peek() != null) {
-			System.out.println("HBListener:\t" + hbMsgList.remove() + " is alive.");
-
+			hbMsgList.poll();
 		} else {
 			try {
 				Thread.sleep(timeout);
 				if (hbMsgList.peek() == null) {
 					this.closed = true;
-					throw new PanneClientException("Le client" + this.clientName + " est en panne.");
+					throw new PanneServeurException("Le serveur est en panne.");
 				}
 			} catch (Exception e) {
-				throw new PanneClientException("Le client " + this.clientName + " est en panne.");
+				throw new PanneServeurException("Le serveur est en panne.");
 				// TODO: handle exception
 			}
 		}
@@ -45,9 +44,10 @@ public class HeartbeatListener extends Thread {
 	public void run() {
 		while (!this.closed) {
 			try {
-				checkClientAlive();
+				checkServeurAlive();
 			} catch (Exception e) {
 				System.out.println("Error: " + e.getMessage());
+				System.exit(0);
 			}
 		}
 	}

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.nio.channels.ClosedByInterruptException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import message.TextMessage;
 
 public class ReceiveMessage extends Thread {
 	private final ObjectInputStream inputStream;
+	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Socket client;
 	private String receivedMsg;
 	private Boolean closed = false;
@@ -24,15 +27,12 @@ public class ReceiveMessage extends Thread {
 		this.client = client;
 	}
 
-	public void interpretMessage() throws ClassNotFoundException, IOException {
+	
+	public void interpreterMessage() throws ClassNotFoundException, IOException {
 		Object obj = this.inputStream.readObject();
 		if (obj instanceof HBResponse) {
-			if (obj.toString().equals("ACK")) {
-//				System.out.println("Server is alive");
-			} else {
-
-				System.out.println("fail" + obj);
-			}
+			hbMsgList.add("ACK");
+			
 		} else {
 			TextMessage receivedObj = (TextMessage) obj;
 			this.receivedMsg = receivedObj.getMsg();
@@ -59,12 +59,19 @@ public class ReceiveMessage extends Thread {
 	}
 
 	public void run() {
+		
 		try {
+			
+			// Démarrer hbListener
+			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList, this.closed);
+			hbListener.setPriority(Thread.MIN_PRIORITY);
+			hbListener.start();
+			
 			// Récupérer les messages jusqu'à quand il reçoit le message de fin
 			while (!this.closed) {
 
 				try {
-					interpretMessage();
+					interpreterMessage();
 					// Recevoir le message entrant
 					if (this.receivedMsg != null) {
 
