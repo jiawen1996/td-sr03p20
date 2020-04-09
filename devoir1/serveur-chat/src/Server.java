@@ -1,11 +1,9 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
-import java.util.Vector;
+
+import thread.MessageReceptor;
 
 public class Server {
 	

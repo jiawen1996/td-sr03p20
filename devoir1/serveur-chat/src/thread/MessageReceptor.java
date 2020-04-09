@@ -1,5 +1,4 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+package thread;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
