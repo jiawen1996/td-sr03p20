@@ -1,10 +1,7 @@
 package thread;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import message.HBMessage;
 
@@ -41,9 +38,7 @@ public class HeartbeatAgent extends Thread {
 			System.out.println("Thread " + DEFAULT_NAME + " interrupted.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		}
-//		System.out.println("Thread " + DEFAULT_NAME + " exiting.");
 
 	}
 

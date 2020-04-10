@@ -38,7 +38,7 @@ public class MessageReceptor extends Thread {
 	 * @throws IOException
 	 */
 	public void hbMsgHandler() throws IOException {
-		sendObject(this, new HBResponse());
+		sendObject(this, new HBMessage());
 		hbMsgList.add(this.clientName);
 	}
 	

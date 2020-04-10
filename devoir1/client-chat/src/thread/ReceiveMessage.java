@@ -1,18 +1,12 @@
 package thread;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.nio.channels.ClosedByInterruptException;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import message.HBMessage;
-import message.HBResponse;
 import message.TextMessage;
 
 public class ReceiveMessage extends Thread {
@@ -30,7 +24,7 @@ public class ReceiveMessage extends Thread {
 	
 	public void interpreterMessage() throws ClassNotFoundException, IOException {
 		Object obj = this.inputStream.readObject();
-		if (obj instanceof HBResponse) {
+		if (obj instanceof HBMessage) {
 			hbMsgList.add("ACK");
 			
 		} else {
