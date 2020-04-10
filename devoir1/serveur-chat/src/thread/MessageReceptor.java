@@ -59,7 +59,7 @@ public class MessageReceptor extends Thread {
 	 * 
 	 * @throws IOException
 	 */
-	public void terminierSocket() {
+	public void terminerSocket() {
 		try {
 			System.out.println(this.clientName + " se déconnecte.");
 			listClient.remove(this);
@@ -206,11 +206,11 @@ public class MessageReceptor extends Thread {
 			// Terminer la session
 			if (this.closed) {
 				this.sendObject(this, new TextMessage("Vous avez quitté la conversation"));
-				terminierSocket();
+				terminerSocket();
 			}
 
 		} catch (IOException e) {
-			terminierSocket();
+			terminerSocket();
 			System.out.println("La session de " + this.clientName + " a terminé.");
 
 		} catch (ClassNotFoundException e) {
