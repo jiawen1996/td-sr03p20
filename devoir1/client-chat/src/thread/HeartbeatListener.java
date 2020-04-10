@@ -5,10 +5,10 @@ import java.util.Queue;
 
 import exception.PanneServeurException;
 
-class HeartbeatListener extends Thread{
+class HeartbeatListener extends Thread {
 	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Boolean closed = false;
-	private long timeout = 15 * 1000;
+	private long timeout = 10 * 1000;
 
 	public Boolean didClientDie() {
 		return this.closed;
@@ -25,20 +25,22 @@ class HeartbeatListener extends Thread{
 
 	public void checkServeurAlive() throws PanneServeurException {
 		// Si la queue de HBMsg n'est pas vide -> cette client est active
-		if (hbMsgList.peek() != null) {
-			hbMsgList.poll();
-		} else {
-			try {
+
+		try {
+			if (hbMsgList.peek() != null) {
+				hbMsgList.poll();
+				Thread.sleep(6 * 1000);
+
+			} else {
 				Thread.sleep(timeout);
-				if (hbMsgList.peek() == null) {
-					this.closed = true;
-					throw new PanneServeurException("Le serveur est en panne.");
-				}
-			} catch (Exception e) {
-				throw new PanneServeurException("Le serveur est en panne.");
-				// TODO: handle exception
+				hbMsgList.element();
 			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new PanneServeurException("Le serveur est en panne.");
 		}
+
 	}
 
 	public void run() {

@@ -94,6 +94,7 @@ public class ReceiveMessage extends Thread {
 			}
 			
 			if(this.closed) {
+				hbListener.setHBListenrClosed(true);
 				terminerSocket();
 			}
 		} catch (Exception e) {
