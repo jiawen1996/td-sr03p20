@@ -47,8 +47,7 @@ public class HeartbeatListener extends Thread {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("coucou");
-			throw new PanneClientException("Le client \"" + this.clientName + "\" est en panne.");
+			throw new PanneClientException("Le client \"" + clientName + "\" est en panne.");
 		}
 		
 	}
