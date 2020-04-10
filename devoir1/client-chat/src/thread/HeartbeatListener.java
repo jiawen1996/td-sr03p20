@@ -8,8 +8,8 @@ import exception.PanneServeurException;
 class HeartbeatListener extends Thread {
 	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Boolean closed = false;
-	private long timeout = 10 * 1000;
-
+	private long DEFAULT_CHECK_PERIOD = 10 * 1000;
+	private long DEFAULT_READ_PERIOD = 6 * 1000;
 	public Boolean didClientDie() {
 		return this.closed;
 	}
@@ -29,10 +29,10 @@ class HeartbeatListener extends Thread {
 		try {
 			if (hbMsgList.peek() != null) {
 				hbMsgList.poll();
-				Thread.sleep(6 * 1000);
+				Thread.sleep(DEFAULT_READ_PERIOD);
 
 			} else {
-				Thread.sleep(timeout);
+				Thread.sleep(DEFAULT_CHECK_PERIOD);
 				hbMsgList.element();
 			}
 

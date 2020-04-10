@@ -11,7 +11,8 @@ public class HeartbeatListener extends Thread {
 	//Grâce à l'avantage "First in first out" de Queue
 	private static Queue<String> hbMsgList = new LinkedList<>();
 	private Boolean closed = false;
-	private long timeout = 8 * 1000;
+	private long DEFAULT_CHECK_PERIOD = 8 * 1000;
+	private long DEFAULT_READ_PERIOD = 6 * 1000;
 	final private String clientName;
 
 	/**
@@ -38,10 +39,10 @@ public class HeartbeatListener extends Thread {
 		try {
 			if (hbMsgList.peek() != null) {
 				System.out.println("HBListener:\t" + hbMsgList.remove() + " is alive.");
-				Thread.sleep(6 * 1000);
+				Thread.sleep(DEFAULT_READ_PERIOD);
 
 			} else {
-				Thread.sleep(timeout);
+				Thread.sleep(DEFAULT_CHECK_PERIOD);
 				hbMsgList.element();
 			}
 
