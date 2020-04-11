@@ -1,3 +1,6 @@
+/**
+ * Contenir le thread utilisé par la classe Server
+ */
 package thread;
 
 import java.io.IOException;
@@ -64,8 +67,6 @@ public class MessageReceptor extends Thread {
 	/**
 	 * Annoncer la déconnexion aux autres clients et terminer les I/O flux et le
 	 * socket
-	 * 
-	 * 
 	 */
 	public void terminerSocket() {
 		try {

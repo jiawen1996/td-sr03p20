@@ -1,8 +1,7 @@
-package server;
-
 /**
  * Contenir la classe Server
  */
+package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -44,7 +43,7 @@ public class Server {
 		 * Une boucle infinie pour continuer à accepter les demandes entrantes Créer un
 		 * socket de communication pour chaque client Passer le socket dans un thread
 		 */
-		int numeroClient = 0; 
+		int numeroClient = 0;
 		while (true) {
 			client = serverSocket.accept();
 

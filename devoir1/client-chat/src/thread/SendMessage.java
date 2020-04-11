@@ -62,20 +62,19 @@ public class SendMessage extends Thread {
 
 		while (!this.closed) {
 			synchronized (this) {
-				
-				// Récupérer le contenu du message 
+
+				// Récupérer le contenu du message
 				String sendMsg = scn.nextLine();
 				if (sendMsg != null) {
 					try {
 						this.sendObject(new TextMessage(sendMsg));
 
-						
 						// Quitter la boucle après avoir envoyer le message de fermeture du socket
 						if (sendMsg.equals("exit")) {
 							// Fermer le flux de SendMessage
 							this.closed = true;
 							// Fermer le flux de heartbeatAgent
-							heartbeatAgent.setClosed(true);
+							heartbeatAgent.closeHeartbeatAgent(true);
 							break;
 						}
 					} catch (IOException ex) {
