@@ -1,4 +1,5 @@
 package thread;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -13,16 +14,22 @@ import message.HBResponse;
 import message.TextMessage;
 
 /**
- * Un thead qui intercepte tout message envoyé dans cet objet socket récemment stocké
+ * Un Thread qui traite des messages provenance d'un client de serveur
  * 
+ * @author Linh Nguyen - Jiawen Lyu
+ *
  */
 public class MessageReceptor extends Thread {
-
+	// La liste de clients actifs
 	private static Hashtable<MessageReceptor, String> listClient = new Hashtable<MessageReceptor, String>();
 	private static Queue<String> hbMsgList = new LinkedList<>();
+	// Le Socket de communication d'un client
 	private Socket client;
+	// Le pseudonyme du client
 	private String clientName;
+	// Le stream d'entrée
 	private ObjectInputStream inputStream = null;
+	// Le stream de sortie
 	private ObjectOutputStream outputStream = null;
 	private Boolean closed = false;
 
@@ -41,7 +48,7 @@ public class MessageReceptor extends Thread {
 		sendObject(this, new HBMessage());
 		hbMsgList.add(this.clientName);
 	}
-	
+
 	/**
 	 * Envoyer l'objet de message à la destination
 	 * 
@@ -53,11 +60,12 @@ public class MessageReceptor extends Thread {
 		destination.outputStream.writeObject(obj);
 		destination.outputStream.flush();
 	}
-	
+
 	/**
-	 * Annoncer la déconnexion aux autres clients et terminer les I/O flux et le socket
+	 * Annoncer la déconnexion aux autres clients et terminer les I/O flux et le
+	 * socket
 	 * 
-	 * @throws IOException
+	 * 
 	 */
 	public void terminerSocket() {
 		try {
@@ -107,6 +115,10 @@ public class MessageReceptor extends Thread {
 			System.out.println("Broadcast message a été envoyé par " + this.clientName);
 		}
 	}
+
+	/**
+	 * Communiquer entre le serveur et un client Demander le pseudonyme du client
+	 */
 
 	@Override
 	public void run() {

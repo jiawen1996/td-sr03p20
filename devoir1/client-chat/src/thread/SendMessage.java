@@ -1,3 +1,6 @@
+/**
+ * Contenir des threads utilisé par la classe Client
+ */
 package thread;
 
 import java.io.IOException;
@@ -8,20 +11,28 @@ import java.util.logging.Logger;
 
 import message.TextMessage;
 
+/**
+ * Un Thread pour envoyer le message de client
+ * 
+ * @author Linh Nguyen - Jiawen Lyu
+ */
 public class SendMessage extends Thread {
-	Scanner scn = new Scanner(System.in);
-	final ObjectOutputStream outputStream;
+	// La variable pour récupérer l'entre sur la console
+	private Scanner scn = new Scanner(System.in);
+	// Le stream de sortie
+	private final ObjectOutputStream outputStream;
+	// Le signal permettant savoir si le socket est fermé
 	private Boolean closed = false;
 
 	public SendMessage(ObjectOutputStream outputStream) {
 		this.outputStream = outputStream;
 	}
-	
+
 	public void sendObject(Object obj) throws IOException {
 		this.outputStream.writeObject(obj);
 		this.outputStream.flush();
 	}
-	
+
 	public void terminerSocket() {
 		// Attendre que le serveur ferme la connexion
 		try {
@@ -30,7 +41,7 @@ public class SendMessage extends Thread {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			this.outputStream.close();
 		} catch (IOException e) {
@@ -39,23 +50,31 @@ public class SendMessage extends Thread {
 		}
 	}
 
+	/**
+	 * Préparer le message et l'envoyer au serveur
+	 */
+
 	public void run() {
 		// Démarrer le heartbeatAgent dans le thread de sendMessage
 		HeartbeatAgent heartbeatAgent = new HeartbeatAgent(outputStream, this.closed);
-		heartbeatAgent.setPriority(Thread.MIN_PRIORITY); 
+		heartbeatAgent.setPriority(Thread.MIN_PRIORITY);
 		heartbeatAgent.start();
-		
+
 		while (!this.closed) {
 			synchronized (this) {
+				
+				// Récupérer le contenu du message 
 				String sendMsg = scn.nextLine();
 				if (sendMsg != null) {
 					try {
 						this.sendObject(new TextMessage(sendMsg));
 
+						
+						// Quitter la boucle après avoir envoyer le message de fermeture du socket
 						if (sendMsg.equals("exit")) {
-							//Fermer le flux de SendMessage
+							// Fermer le flux de SendMessage
 							this.closed = true;
-							//Fermer le flux de heartbeatAgent
+							// Fermer le flux de heartbeatAgent
 							heartbeatAgent.setClosed(true);
 							break;
 						}

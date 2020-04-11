@@ -6,27 +6,52 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Contenir des threads utilisé par la classe Client
+ */
 import message.HBMessage;
 import message.TextMessage;
 
+/**
+ * Un Thread qui traite des messages reçus de client
+ * 
+ * @author Linh Nguyen
+ * @author Jiawen Lyu
+ *
+ */
 public class ReceiveMessage extends Thread {
+
+	// Le stream d'entré
 	private final ObjectInputStream inputStream;
-	private static Queue<String> hbMsgList = new LinkedList<>();
+
+	// Le socket communication de client
+
 	private Socket client;
+	// Le contenu de message reçu
 	private String receivedMsg;
+
 	private Boolean closed = false;
+
+	private static Queue<String> hbMsgList = new LinkedList<>();
 
 	public ReceiveMessage(Socket client, ObjectInputStream inputStream) {
 		this.inputStream = inputStream;
 		this.client = client;
 	}
 
-	
+	/**
+	 * La méthode de traitement des messages reçus
+	 * 
+	 * @throws ClassNotFoundException
+	 * 
+	 * @throws IOException
+	 * 
+	 */
 	public void interpreterMessage() throws ClassNotFoundException, IOException {
 		Object obj = this.inputStream.readObject();
 		if (obj instanceof HBMessage) {
 			hbMsgList.add("ACK");
-			
+
 		} else {
 			TextMessage receivedObj = (TextMessage) obj;
 			this.receivedMsg = receivedObj.getMsg();
@@ -53,14 +78,14 @@ public class ReceiveMessage extends Thread {
 	}
 
 	public void run() {
-		
+
 		try {
-			
+
 			// Démarrer hbListener
 			HeartbeatListener hbListener = new HeartbeatListener(hbMsgList, this.closed);
 			hbListener.setPriority(Thread.MIN_PRIORITY);
 			hbListener.start();
-			
+
 			// Récupérer les messages jusqu'à quand il reçoit le message de fin
 			while (!this.closed) {
 
@@ -71,7 +96,8 @@ public class ReceiveMessage extends Thread {
 
 						synchronized (this) {
 
-							// Quitter la boucle
+							// Quitter la boucle si le socket a fermé, sinon afficher le message sur la
+							// console
 							if (this.receivedMsg.equals("Vous avez quitté la conversation")) {
 								System.out.println("Bye!");
 								this.closed = true;
@@ -92,8 +118,8 @@ public class ReceiveMessage extends Thread {
 					e.printStackTrace();
 				}
 			}
-			
-			if(this.closed) {
+
+			if (this.closed) {
 				hbListener.setHBListenrClosed(true);
 				terminerSocket();
 			}
