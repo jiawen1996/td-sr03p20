@@ -1,39 +1,39 @@
+package clients;
 
 import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.UnknownHostException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import thread.SendMessage;
 
 import java.net.Socket;
 import thread.*;
 
-public class Client2 {
+/**
+ * 
+ * Établir le socket de connexion entre le client et le serveur. Récupérer les
+ * entrées et ainsi les sorties de streams. Créer deux threads pour envoyer et
+ * recevoir de message et puis les lance.
+ * 
+ * @author Linh Nguyen - Jiawen Lyu
+ *
+ */
+public class Client {
+	// Le numéro du port de serveur
 	private final static int ServerPort = 1234;
-	private static boolean closed = false; // Signal si le client a quitté
 
 	public static void main(String args[]) throws UnknownHostException, IOException {
-		
-		
-		// Récupérer l'IP de localhost
-//        InetAddress ip = InetAddress.getByName("localhost"); 
 
-		
 		// Établir la connexion
 		Socket s = new Socket("localhost", ServerPort);
 		System.out.println("Connected : " + s);
-				
 
 		// Récupérer input and out streams
-		DataInputStream inputStream = new DataInputStream(s.getInputStream());
-		DataOutputStream outputStream = new DataOutputStream(s.getOutputStream());
-
+		ObjectOutputStream outputStream = new ObjectOutputStream(s.getOutputStream());
+		ObjectInputStream inputStream = new ObjectInputStream(s.getInputStream());
 		
-		// Créer des thread pour traiter des messages 
+		// Créer des thread pour traiter des messages
 		SendMessage sendMessage = new SendMessage(outputStream);
 		ReceiveMessage receiveMessage = new ReceiveMessage(s, inputStream);
 		
