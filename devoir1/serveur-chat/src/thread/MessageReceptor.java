@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import message.HBMessage;
-import message.HBResponse;
 import message.TextMessage;
 
 /**
@@ -67,6 +66,7 @@ public class MessageReceptor extends Thread {
 	/**
 	 * Annoncer la déconnexion aux autres clients et terminer les I/O flux et le
 	 * socket
+	 * 
 	 */
 	public void terminerSocket() {
 		try {
@@ -206,7 +206,7 @@ public class MessageReceptor extends Thread {
 					// Quitter la conversation
 					if (msg.startsWith("exit")) {
 						this.closed = true;
-						hbListener.setHBListenrClosed(true);
+						hbListener.closeHBListener(true);
 						break;
 					} else {
 

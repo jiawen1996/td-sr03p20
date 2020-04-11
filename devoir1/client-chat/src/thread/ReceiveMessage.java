@@ -120,7 +120,7 @@ public class ReceiveMessage extends Thread {
 			}
 
 			if (this.closed) {
-				hbListener.setHBListenrClosed(true);
+				hbListener.closeHBListener(true);
 				terminerSocket();
 			}
 		} catch (Exception e) {
