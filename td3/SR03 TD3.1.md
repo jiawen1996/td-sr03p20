@@ -44,7 +44,8 @@ https://docs.google.com/document/d/1xIKQtJTj-V5L2daSOMO8932G7JRYXA7ydgnnfOYud0s/
   ```sql
   mysql -u root -p
   CREATE DATABASE sr03;
-  GRANT ALL PRIVILEGES ON sr03.* TO jiawen IDENTIFIED BY '120907';
+  CREATE USER 'sr03'@'localhost' IDENTIFIED BY 'sr03p20';
+  GRANT ALL PRIVILEGES ON sr03.* TO 'sr03'@'localhost' IDENTIFIED BY 'sr03p20';
   flush privileges;
   ```
 
